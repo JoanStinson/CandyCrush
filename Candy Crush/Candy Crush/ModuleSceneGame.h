@@ -4,10 +4,11 @@
 #include "Module.h"
 #include "Animation.h"
 #include "Globals.h"
+#include "CandyGrid.h"
 
-#define CANDY_SIZE 62
 #define ROWS 6
 #define COLS 5
+#define CANDY_SIZE 62
 
 struct SDL_Texture;
 
@@ -21,21 +22,12 @@ public:
 	update_status LateUpdate() override;
 	bool CleanUp() override;
 
-public:
-
-	SDL_Texture *graphics = nullptr;
+private:
+	SDL_Texture *backgroundTexture = nullptr;
 	SDL_Rect background;
-
-	SDL_Texture *candies = nullptr;
-	SDL_Rect red;
-	SDL_Rect orange;
-	SDL_Rect yellow;
-	SDL_Rect green;
-	SDL_Rect blue;
-	SDL_Rect purple;
-
-	int **tablero = nullptr;
-
+	SDL_Texture *candiesTexture = nullptr;
+	CandyGrid *candyGrid = nullptr;
+	SDL_Rect GetRectFromCandy(Candy *candy);
 };
 
 #endif // __MODULESCENEGAME_H__

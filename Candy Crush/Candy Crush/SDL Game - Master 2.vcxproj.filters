@@ -17,6 +17,9 @@
     <Filter Include="Utils\GIF">
       <UniqueIdentifier>{b8b7dc3d-248a-4182-83aa-fa3c98ccb676}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Data">
+      <UniqueIdentifier>{301af1ac-6f12-4bc5-bbd2-450ea1a9b4b0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ModuleRender.h">
@@ -67,6 +70,12 @@
     <ClInclude Include="ModuleSceneGame.h">
       <Filter>Game Modules</Filter>
     </ClInclude>
+    <ClInclude Include="Candy.h">
+      <Filter>Data</Filter>
+    </ClInclude>
+    <ClInclude Include="CandyGrid.h">
+      <Filter>Data</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -110,6 +119,12 @@
     </ClCompile>
     <ClCompile Include="ModuleSceneGame.cpp">
       <Filter>Game Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Candy.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="CandyGrid.cpp">
+      <Filter>Main</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

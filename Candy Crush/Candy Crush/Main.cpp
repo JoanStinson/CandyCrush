@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <time.h>
 #include "Application.h"
 #include "Globals.h"
 #include "SDL2/include/SDL.h"
@@ -16,6 +17,7 @@ enum main_states {
 Application* App = nullptr;
 
 int main(int argc, char ** argv) {
+	srand(static_cast<unsigned>(time(NULL)));
 	int main_return = EXIT_FAILURE;
 	main_states state = MAIN_CREATION;
 

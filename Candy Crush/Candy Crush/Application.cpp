@@ -42,7 +42,7 @@ bool Application::Init() {
 	}
 
 	// Start the first scene --
-	fade->FadeToBlack(scene_intro, nullptr, 3.0F);
+	fade->FadeToBlack(scene_game, nullptr, 3.0F);
 
 	return ret;
 }

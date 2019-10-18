@@ -72,6 +72,8 @@
   <ItemGroup>
     <ClInclude Include="Animation.h" />
     <ClInclude Include="Application.h" />
+    <ClInclude Include="Candy.h" />
+    <ClInclude Include="CandyGrid.h" />
     <ClInclude Include="CEV_gif.h" />
     <ClInclude Include="CEV_gifDeflate.h" />
     <ClInclude Include="CEV_gifToSurface.h" />
@@ -89,6 +91,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
+    <ClCompile Include="Candy.cpp" />
+    <ClCompile Include="CandyGrid.cpp" />
     <ClCompile Include="CEV_gifDeflate.c" />
     <ClCompile Include="CEV_gifToSurface.c" />
     <ClCompile Include="CEV_gifUser.c" />
