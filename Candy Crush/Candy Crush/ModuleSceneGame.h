@@ -5,10 +5,13 @@
 #include "Animation.h"
 #include "Globals.h"
 #include "CandyGrid.h"
+#include "ModuleInput.h"
 
 #define ROWS 6
 #define COLS 5
 #define CANDY_SIZE 62
+#define XOFFSET 30
+#define YOFFSET 120
 
 struct SDL_Texture;
 
@@ -27,7 +30,13 @@ private:
 	SDL_Rect background;
 	SDL_Texture *candiesTexture = nullptr;
 	CandyGrid *candyGrid = nullptr;
+	iPoint *selectedPoint = nullptr;
+
+private:
 	SDL_Rect GetRectFromCandy(Candy *candy);
+	void OnMouseClick(iPoint mousePos);
+	void OnMouseUnClick(iPoint mousePos);
+	void HandleCandyMove(Candy *selectedCandy, MouseMove move);
 };
 
 #endif // __MODULESCENEGAME_H__

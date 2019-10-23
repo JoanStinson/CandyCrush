@@ -112,8 +112,6 @@ update_status ModuleInput::PreUpdate() {
 	if (GetWindowEvent(EventWindow::WE_QUIT) == true || GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN)
 		return UPDATE_STOP;
 
-	printf("Pos: %d, Motion: %d\n", mouse.x, mouse_motion.x);
-
 	return UPDATE_CONTINUE;
 }
 

@@ -38,6 +38,9 @@ void CandyGrid::Move(iPoint pos, iPoint newPos) {
 }
 
 void CandyGrid::Swap(iPoint pos, iPoint newPos) {
+	grid[newPos.x][newPos.y]->SetPos(pos);
+	grid[pos.x][pos.y]->SetPos(newPos);
+
 	Candy *temp = grid[newPos.x][newPos.y];
 	grid[newPos.x][newPos.y] = grid[pos.x][pos.y];
 	grid[pos.x][pos.y] = temp;

@@ -10,7 +10,9 @@ class Candy {
 public:
 	Candy(iPoint pos, CandyType type);
 	CandyType GetType();
-	
+	iPoint GetPos();
+	void SetPos(iPoint pos);
+
 private:
 	iPoint pos;
 	CandyType type;

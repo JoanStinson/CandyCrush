@@ -3,13 +3,12 @@
 #include "ModuleSceneIntro.h"
 #include "ModuleRender.h"
 #include "ModuleTextures.h"
-#include "ModuleInput.h"
+
 #include "ModuleAudio.h"
 #include "ModuleFadeToBlack.h"
 #include "SDL2/include/SDL.h"
 
 ModuleSceneGame::ModuleSceneGame(bool start_enabled) : Module(start_enabled) {
-	// setup sprites
 	background = { 0, 0, 375, 667 };
 }
 
@@ -30,7 +29,6 @@ bool ModuleSceneGame::Start() {
 // UnLoad assets
 bool ModuleSceneGame::CleanUp() {
 	LOG("Unloading game scene");
-
 	App->textures->Unload(backgroundTexture);
 	App->textures->Unload(candiesTexture);
 	return true;
@@ -40,22 +38,22 @@ SDL_Rect ModuleSceneGame::GetRectFromCandy(Candy *candy) {
 	SDL_Rect image;
 	switch (candy->GetType()) {
 	case CandyType::RED:
-		image = { 15,	201, CANDY_SIZE, CANDY_SIZE };
+		image = { 15, 201, CANDY_SIZE, CANDY_SIZE };
 		break;
 	case CandyType::ORANGE:
-		image = { 108,  201, CANDY_SIZE, CANDY_SIZE };
+		image = { 108, 201, CANDY_SIZE, CANDY_SIZE };
 		break;
 	case CandyType::YELLOW:
-		image = { 202,  201, CANDY_SIZE, CANDY_SIZE };
+		image = { 202, 201, CANDY_SIZE, CANDY_SIZE };
 		break;
 	case CandyType::GREEN:
-		image = { 295,  201, CANDY_SIZE, CANDY_SIZE };
+		image = { 295, 201, CANDY_SIZE, CANDY_SIZE };
 		break;
 	case CandyType::BLUE:
-		image = { 389,  201, CANDY_SIZE, CANDY_SIZE };
+		image = { 389, 201, CANDY_SIZE, CANDY_SIZE };
 		break;
 	case CandyType::PURPLE:
-		image = { 481,  201, CANDY_SIZE, CANDY_SIZE };
+		image = { 481, 201, CANDY_SIZE, CANDY_SIZE };
 		break;
 	default:
 		break;
@@ -63,22 +61,79 @@ SDL_Rect ModuleSceneGame::GetRectFromCandy(Candy *candy) {
 	return image;
 }
 
+void ModuleSceneGame::OnMouseClick(iPoint mousePos) {
+	const int xEnd = (CANDY_SIZE * COLS) + XOFFSET;
+	const int yEnd = (CANDY_SIZE * ROWS) + YOFFSET;
+
+	if (mousePos.x >= XOFFSET && mousePos.x <= xEnd && mousePos.y >= YOFFSET && mousePos.y <= yEnd) {
+		selectedPoint = new iPoint(mousePos);
+	}
+}
+
+void ModuleSceneGame::OnMouseUnClick(iPoint mousePos) {
+	if (selectedPoint != nullptr) {
+		iPoint mouseDif = mousePos - *selectedPoint;
+		MouseMove move = abs(mouseDif.x) > abs(mouseDif.y) ? (mouseDif.x < 0 ? MouseMove::LEFT : MouseMove::RIGHT) : (mouseDif.y < 0 ? MouseMove::UP : MouseMove::DOWN);
+
+		int selectedRow = (selectedPoint->y - YOFFSET) / CANDY_SIZE;
+		int selectedCol = (selectedPoint->x - XOFFSET) / CANDY_SIZE;
+		Candy *selectedCandy = candyGrid->Get(iPoint(selectedRow, selectedCol));
+
+		HandleCandyMove(selectedCandy, move);
+		selectedPoint = nullptr;
+	}
+}
+
+void ModuleSceneGame::HandleCandyMove(Candy *selectedCandy, MouseMove move) {
+	iPoint nextPos = selectedCandy->GetPos();
+
+	switch (move) {
+	case MouseMove::UP:
+		nextPos.x--;
+		break;
+
+	case MouseMove::DOWN:
+		nextPos.x++;
+		break;
+
+	case MouseMove::RIGHT:
+		nextPos.y++;
+		break;
+
+	case MouseMove::LEFT:
+		nextPos.y--;
+		break;
+	}
+
+	if (nextPos.x >= 0 && nextPos.x < ROWS && nextPos.y >= 0 && nextPos.y < COLS) {
+		Candy *nextCandy = candyGrid->Get(nextPos);
+		candyGrid->Swap(selectedCandy->GetPos(), nextPos);
+		//printf("Selected Candy: %d %d Next Candy: %d %d\n", selectedCandy->GetPos().x, selectedCandy->GetPos().y, nextCandy->GetPos().x, nextCandy->GetPos().y);
+	}
+
+}
+
 // Update: draw background
 update_status ModuleSceneGame::Update() {
 
+	// Draw background
 	App->renderer->Blit(backgroundTexture, 0, 0, &background, LAYER_BACK);
 
 	// Draw candies
-	const int xOffset = 30;
-	const int yOffset = 120;
-
 	for (int i = 0; i < ROWS; ++i) {
 		for (int j = 0; j < COLS; ++j) {
 			Candy *candy = candyGrid->Get(iPoint(i, j));
-			App->renderer->Blit(candiesTexture, (CANDY_SIZE * j) + xOffset, (CANDY_SIZE * i) + yOffset, &GetRectFromCandy(candy), LAYER_FRONT);
+			App->renderer->Blit(candiesTexture, (CANDY_SIZE * j) + XOFFSET, (CANDY_SIZE * i) + YOFFSET, &GetRectFromCandy(candy), LAYER_FRONT);
 		}
 	}
 
+	// Mouse events
+	if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN)
+		OnMouseClick(App->input->GetMousePosition());
+	else if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_UP)
+		OnMouseUnClick(App->input->GetMousePosition());
+
+	// Change scene
 	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
 		App->fade->FadeToBlack(App->scene_intro, App->scene_game, 3.0F);
 
@@ -86,6 +141,5 @@ update_status ModuleSceneGame::Update() {
 }
 
 update_status ModuleSceneGame::LateUpdate() {
-
 	return UPDATE_CONTINUE;
 }
