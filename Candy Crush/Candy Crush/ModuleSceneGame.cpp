@@ -77,14 +77,26 @@ void ModuleSceneGame::OnMouseUnClick(iPoint mousePos) {
 
 		int selectedRow = (selectedPoint->y - YOFFSET) / CANDY_SIZE;
 		int selectedCol = (selectedPoint->x - XOFFSET) / CANDY_SIZE;
-		Candy *selectedCandy = candyGrid->Get(iPoint(selectedRow, selectedCol));
 
-		HandleCandyMove(selectedCandy, move);
+		Candy *selectedCandy = candyGrid->Get(iPoint(selectedRow, selectedCol));
+		Candy *nextCandy = GetNextCandy(selectedCandy, move);
+
+		if (nextCandy != nullptr) {
+			CandyType type = selectedCandy->GetType();
+			iPoint pos = nextCandy->GetPos();
+
+			CandyMatch match = candyGrid->CheckMatch(type, pos);
+			printf("%d\n", match);
+
+			HandleMatch(selectedCandy, nextCandy, match);
+		}
+
 		selectedPoint = nullptr;
 	}
 }
 
-void ModuleSceneGame::HandleCandyMove(Candy *selectedCandy, MouseMove move) {
+Candy* ModuleSceneGame::GetNextCandy(Candy *selectedCandy, MouseMove move) {
+	Candy *nextCandy = nullptr;
 	iPoint nextPos = selectedCandy->GetPos();
 
 	switch (move) {
@@ -106,9 +118,32 @@ void ModuleSceneGame::HandleCandyMove(Candy *selectedCandy, MouseMove move) {
 	}
 
 	if (nextPos.x >= 0 && nextPos.x < ROWS && nextPos.y >= 0 && nextPos.y < COLS) {
-		Candy *nextCandy = candyGrid->Get(nextPos);
-		candyGrid->Swap(selectedCandy->GetPos(), nextPos);
-		//printf("Selected Candy: %d %d Next Candy: %d %d\n", selectedCandy->GetPos().x, selectedCandy->GetPos().y, nextCandy->GetPos().x, nextCandy->GetPos().y);
+		nextCandy = candyGrid->Get(nextPos);
+	}
+
+	return nextCandy;
+}
+
+void ModuleSceneGame::HandleMatch(Candy *selectedCandy, Candy *nextCandy, CandyMatch match) {
+
+	if (match.GetMatch() != Match::NONE) {
+
+		candyGrid->Swap(selectedCandy->GetPos(), nextCandy->GetPos());
+
+		switch (match.GetMatch()) {
+		case Match::ROW:
+			candyGrid->ClearMatchedRow(match.GetYBegin(), match.GetYEnd());
+			break;
+
+		case Match::COL:
+			candyGrid->ClearMatchedCol(match.GetXBegin(), match.GetXEnd());
+			break;
+
+		case Match::BOTH:
+			candyGrid->ClearMatchedRow(match.GetYBegin(), match.GetYEnd());
+			candyGrid->ClearMatchedCol(match.GetXBegin(), match.GetXEnd());
+			break;
+		}
 	}
 
 }

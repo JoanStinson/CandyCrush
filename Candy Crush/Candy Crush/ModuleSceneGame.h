@@ -6,6 +6,7 @@
 #include "Globals.h"
 #include "CandyGrid.h"
 #include "ModuleInput.h"
+#include "CandyMatch.h"
 
 #define ROWS 6
 #define COLS 5
@@ -36,7 +37,8 @@ private:
 	SDL_Rect GetRectFromCandy(Candy *candy);
 	void OnMouseClick(iPoint mousePos);
 	void OnMouseUnClick(iPoint mousePos);
-	void HandleCandyMove(Candy *selectedCandy, MouseMove move);
+	Candy* GetNextCandy(Candy *selectedCandy, MouseMove move);
+	void HandleMatch(Candy *selectedCandy, Candy *nextCandy, CandyMatch match);
 };
 
 #endif // __MODULESCENEGAME_H__
