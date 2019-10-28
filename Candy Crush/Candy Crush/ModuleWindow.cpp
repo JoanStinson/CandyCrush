@@ -1,7 +1,7 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleWindow.h"
-#include "SDL2/include/SDL.h"
+#include <SDL.h>
 
 ModuleWindow::ModuleWindow() {
 }

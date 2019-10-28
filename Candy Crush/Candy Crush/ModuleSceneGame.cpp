@@ -6,7 +6,7 @@
 
 #include "ModuleAudio.h"
 #include "ModuleFadeToBlack.h"
-#include "SDL2/include/SDL.h"
+#include <SDL.h>
 
 ModuleSceneGame::ModuleSceneGame(bool start_enabled) : Module(start_enabled) {
 	background = { 0, 0, 375, 667 };

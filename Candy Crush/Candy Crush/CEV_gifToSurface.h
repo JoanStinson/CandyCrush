@@ -8,7 +8,7 @@
 #ifndef GIFTOSURFACE_H_INCLUDED
 #define GIFTOSURFACE_H_INCLUDED
 
-#include "SDL2/include/SDL.h"
+#include <SDL.h>
 #include "CEV_gif.h"
 #include "CEV_gifDeflate.h"
 

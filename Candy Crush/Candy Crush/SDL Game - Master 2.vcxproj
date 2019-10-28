@@ -14,7 +14,7 @@
     <ProjectGuid>{23E2AFD3-6C7A-416C-90D9-D73547234F41}</ProjectGuid>
     <RootNamespace>SDLGame</RootNamespace>
     <ProjectName>Candy Crush</ProjectName>
-    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -47,6 +47,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>false</SDLCheck>
       <ExceptionHandling>Sync</ExceptionHandling>
+      <AdditionalIncludeDirectories>./SDL2/include;./SDL2_image/include;./SDL2_mixer/include;./SDL2_ttf/include;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -61,6 +62,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>false</SDLCheck>
       <ExceptionHandling>Sync</ExceptionHandling>
+      <AdditionalIncludeDirectories>./SDL2/include;./SDL2_image/include;./SDL2_mixer/include;./SDL2_ttf/include;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>

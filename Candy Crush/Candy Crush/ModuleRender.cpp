@@ -4,7 +4,7 @@
 #include "ModuleWindow.h"
 #include "ModuleInput.h"
 #include "ModuleSceneIntro.h"
-#include "SDL2/include/SDL.h"
+#include <SDL.h>
 
 ModuleRender::ModuleRender() {
 	ResetCamera();

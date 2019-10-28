@@ -10,7 +10,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
-#include "SDL2/include/SDL.h"
+#include <SDL.h>
 //#include "rwtypes.h"
 #include "CEV_gif.h"
 #include "CEV_gifDeflate.h"

@@ -1,7 +1,7 @@
 #ifndef __GLOBALS_H__
 #define __GLOBALS_H__
 
-#include "SDL2/include/SDL_rect.h"
+#include <SDL_rect.h>
 
 #define LOG(format, ...) log(__FILE__, __LINE__, format, __VA_ARGS__);
 

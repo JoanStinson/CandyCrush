@@ -8,7 +8,7 @@
 #include "ModuleAudio.h"
 #include "ModuleWindow.h"
 #include "ModuleFadeToBlack.h"
-#include "SDL2/include/SDL.h"
+#include <SDL.h>
 #include "CEV_gif.h"
 #include "CEV_gifDeflate.h"
 #include "CEV_gifToSurface.h"

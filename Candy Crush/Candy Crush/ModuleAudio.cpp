@@ -1,8 +1,8 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleAudio.h"
-#include "SDL2/include/SDL.h"
-#include "SDL2_mixer/include/SDL_mixer.h"
+#include <SDL.h>
+#include <SDL_mixer.h>
 #pragma comment( lib, "SDL2_mixer/lib/x86/SDL2_mixer.lib" )
 using namespace std;
 

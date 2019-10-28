@@ -7,7 +7,7 @@
 #ifndef GIFUSER_H_INCLUDED
 #define GIFUSER_H_INCLUDED
 
-#include "SDL2/include/SDL.h"
+#include <SDL.h>
 //#include "CEV_gifToSurface.h"
 
 #define GIF_FORWARD     0

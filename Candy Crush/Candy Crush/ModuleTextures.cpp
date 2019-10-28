@@ -2,9 +2,9 @@
 #include "Application.h"
 #include "ModuleRender.h"
 #include "ModuleTextures.h"
-#include "SDL2/include/SDL.h"
-#include "SDL2_image/include/SDL_image.h"
-#include "SDL2_ttf/include/SDL_ttf.h"
+#include <SDL.h>
+#include <SDL_image.h>
+#include <SDL_ttf.h>
 #pragma comment( lib, "SDL2_image/lib/x86/SDL2_image.lib" )
 #pragma comment( lib, "SDL2_ttf/lib/x86/SDL2_ttf.lib" )
 using namespace std;

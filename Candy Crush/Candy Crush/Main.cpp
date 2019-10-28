@@ -2,7 +2,7 @@
 #include <time.h>
 #include "Application.h"
 #include "Globals.h"
-#include "SDL2/include/SDL.h"
+#include <SDL.h>
 #pragma comment( lib, "SDL2/lib/x86/SDL2.lib" )
 #pragma comment( lib, "SDL2/lib/x86/SDL2main.lib" )
 

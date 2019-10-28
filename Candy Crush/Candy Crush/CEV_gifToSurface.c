@@ -8,7 +8,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
-#include "SDL2/include/SDL.h"
+#include <SDL.h>
 #include "CEV_gifToSurface.h"
 #include "CEV_gif.h"
 
