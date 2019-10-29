@@ -1,17 +1,40 @@
 #include "CandyGrid.h"
 #include <stdlib.h>
+#include <string>
+#include <fstream>
+#include <sstream>
 
 CandyGrid::CandyGrid(int rows, int cols) : rows(rows), cols(cols) {
 
 	grid.reserve(rows);
 
-	for (int i = 0; i < rows; ++i) {
-		std::vector<Candy*> temp;
-		for (int j = 0; j < cols; ++j) {
-			Candy *newCandy = new Candy(iPoint(i, j), CandyType(rand() % CANDY_TYPES));
-			temp.push_back(newCandy);
+	// Init grid with file
+	std::string line;
+	std::ifstream file;
+	file.open("Game/level1.txt");
+
+	int i, j;
+	i = 0;
+	if (file.is_open()) { 
+
+		while (std::getline(file, line)) {
+			std::vector<Candy*> temp;
+			std::string token;
+			std::istringstream tokenStream(line);
+			j = 0;
+
+			while (std::getline(tokenStream, token, ' ')) {
+				CandyType type = CandyType(std::stoi(token));
+				Candy *newCandy = new Candy(iPoint(i, j), type);
+				temp.push_back(newCandy);
+				j++;
+			}
+
+			grid.push_back(temp);
+			i++;
+			
 		}
-		grid.push_back(temp);
+		file.close();
 	}
 }
 
@@ -25,8 +48,8 @@ CandyGrid::~CandyGrid() {
 	grid.clear();
 }
 
-void CandyGrid::Add(Candy* candy, iPoint pos) {
-	grid[pos.x][pos.y] = candy;
+void CandyGrid::ChangeType(CandyType type, iPoint pos) {
+	grid[pos.x][pos.y]->SetType(type);
 }
 
 Candy* CandyGrid::Get(iPoint pos) {
@@ -117,10 +140,26 @@ CandyMatch CandyGrid::CheckMatch(CandyType type, iPoint pos) {
 	return match;
 }
 
-void CandyGrid::ClearMatchedRow(int yBegin, int yEnd) {
+void CandyGrid::ClearMatchedCol(int col, int xBegin, int xEnd) {
+	
+	// Copy upper candies
+	int pos = xEnd;
+	for (int i = xBegin - 1; i >= 0; i--) {
+		Move(iPoint(i, col), iPoint(pos, col));
+		pos--;
+	}
+
+	// Create new candies
+	for (; pos >= 0; pos--) {
+		CandyType type = CandyType(rand() % CANDY_TYPES);
+		ChangeType(type, iPoint(pos, col));
+	}
 
 }
 
-void CandyGrid::ClearMatchedCol(int xBegin, int xEnd) {
+void CandyGrid::ClearMatchedRow(int row, int yBegin, int yEnd) {
 
+	for(int pos = yBegin; pos <= yEnd; pos++){
+		ClearMatchedCol(pos, row, row);
+	}
 }

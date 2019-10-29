@@ -15,3 +15,7 @@ void Candy::SetPos(iPoint pos) {
 	this->pos.x = pos.x;
 	this->pos.y = pos.y;
 }
+
+void Candy::SetType(CandyType type) {
+	this->type = type;
+}

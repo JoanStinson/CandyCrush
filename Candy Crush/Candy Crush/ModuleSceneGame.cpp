@@ -131,21 +131,22 @@ void ModuleSceneGame::HandleMatch(Candy *selectedCandy, Candy *nextCandy, CandyM
 		candyGrid->Swap(selectedCandy->GetPos(), nextCandy->GetPos());
 
 		switch (match.GetMatch()) {
-		case Match::ROW:
-			candyGrid->ClearMatchedRow(match.GetYBegin(), match.GetYEnd());
+		case Match::COL:
+			candyGrid->ClearMatchedCol(selectedCandy->GetPos().y, match.GetXBegin(), match.GetXEnd());
 			break;
 
-		case Match::COL:
-			candyGrid->ClearMatchedCol(match.GetXBegin(), match.GetXEnd());
+		case Match::ROW:
+			candyGrid->ClearMatchedRow(selectedCandy->GetPos().x, match.GetYBegin(), match.GetYEnd());
 			break;
 
 		case Match::BOTH:
-			candyGrid->ClearMatchedRow(match.GetYBegin(), match.GetYEnd());
-			candyGrid->ClearMatchedCol(match.GetXBegin(), match.GetXEnd());
+			candyGrid->ClearMatchedCol(selectedCandy->GetPos().y, match.GetXBegin(), match.GetXEnd());
+			candyGrid->ClearMatchedRow(selectedCandy->GetPos().x, match.GetYBegin(), match.GetYEnd());
 			break;
 		}
 	}
 
+	//TODO clear grid
 }
 
 // Update: draw background

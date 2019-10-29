@@ -12,6 +12,7 @@ public:
 	CandyType GetType();
 	iPoint GetPos();
 	void SetPos(iPoint pos);
+	void SetType(CandyType type);
 
 private:
 	iPoint pos;
