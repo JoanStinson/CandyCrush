@@ -11,10 +11,9 @@ CandyGrid::CandyGrid(int rows, int cols) : rows(rows), cols(cols) {
 	// Init grid with file
 	std::string line;
 	std::ifstream file;
-	file.open("Game/level1.txt");
+	file.open(LEVEL_START);
 
-	int i, j;
-	i = 0;
+	int i = 0, j;
 	if (file.is_open()) { 
 
 		while (std::getline(file, line)) {
@@ -27,11 +26,11 @@ CandyGrid::CandyGrid(int rows, int cols) : rows(rows), cols(cols) {
 				CandyType type = CandyType(std::stoi(token));
 				Candy *newCandy = new Candy(iPoint(i, j), type);
 				temp.push_back(newCandy);
-				j++;
+				++j;
 			}
 
 			grid.push_back(temp);
-			i++;
+			++i;
 			
 		}
 		file.close();
@@ -48,16 +47,17 @@ CandyGrid::~CandyGrid() {
 	grid.clear();
 }
 
-void CandyGrid::ChangeType(CandyType type, iPoint pos) {
-	grid[pos.x][pos.y]->SetType(type);
-}
-
-Candy* CandyGrid::Get(iPoint pos) {
+Candy* CandyGrid::Get(iPoint pos) const {
 	return grid[pos.x][pos.y];
 }
 
 void CandyGrid::Move(iPoint pos, iPoint newPos) {
 	grid[newPos.x][newPos.y] = grid[pos.x][pos.y];
+	grid[newPos.x][newPos.y]->SetPos(newPos);
+	
+	// Generate new candy
+	CandyType type = CandyType(rand() % CANDY_TYPES);
+	grid[pos.x][pos.y] = new Candy(pos, type);
 }
 
 void CandyGrid::Swap(iPoint pos, iPoint newPos) {
@@ -140,26 +140,40 @@ CandyMatch CandyGrid::CheckMatch(CandyType type, iPoint pos) {
 	return match;
 }
 
+void CandyGrid::ClearFromMatch(Candy *candy, CandyMatch match) {
+	switch (match.GetMatch()) {
+	case Match::COL:
+		ClearMatchedCol(candy->GetPos().y, match.GetXBegin(), match.GetXEnd());
+		break;
+
+	case Match::ROW:
+		ClearMatchedRow(candy->GetPos().x, match.GetYBegin(), match.GetYEnd());
+		break;
+
+	case Match::BOTH:
+		ClearMatchedCol(candy->GetPos().y, match.GetXBegin(), match.GetXEnd());
+		ClearMatchedRow(candy->GetPos().x, match.GetYBegin(), match.GetYEnd());
+		break;
+	}
+}
+
+void CandyGrid::ClearGrid() {
+	for (int i = 0; i < rows; ++i) {
+		for (int j = 0; j < cols; ++j) {
+			Candy *candy = Get(iPoint(i, j));
+			CandyMatch match = CheckMatch(candy->GetType(), candy->GetPos());
+			ClearFromMatch(candy, match);
+		}
+	}
+}
+
 void CandyGrid::ClearMatchedCol(int col, int xBegin, int xEnd) {
-	
-	// Copy upper candies
 	int pos = xEnd;
-	for (int i = xBegin - 1; i >= 0; i--) {
+	for (int i = xBegin - 1; i >= 0; --i, --pos) 
 		Move(iPoint(i, col), iPoint(pos, col));
-		pos--;
-	}
-
-	// Create new candies
-	for (; pos >= 0; pos--) {
-		CandyType type = CandyType(rand() % CANDY_TYPES);
-		ChangeType(type, iPoint(pos, col));
-	}
-
 }
 
 void CandyGrid::ClearMatchedRow(int row, int yBegin, int yEnd) {
-
-	for(int pos = yBegin; pos <= yEnd; pos++){
+	for(int pos = yBegin; pos <= yEnd; ++pos)
 		ClearMatchedCol(pos, row, row);
-	}
 }

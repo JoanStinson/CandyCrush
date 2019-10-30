@@ -1,11 +1,7 @@
-// ----------------------------------------------------
-// Point class    -----------
-// ----------------------------------------------------
+#ifndef _POINT_H_
+#define _POINT_H_
 
-#ifndef __POINT_H__
-#define __POINT_H__
-
-template<class TYPE>
+template <class TYPE>
 class Point {
 public:
 
@@ -86,4 +82,4 @@ public:
 typedef Point<int> iPoint;
 typedef Point<float> fPoint;
 
-#endif // __POINT_H__
+#endif

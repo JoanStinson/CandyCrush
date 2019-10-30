@@ -1,6 +1,5 @@
-#ifndef __GLOBALS_H__
-#define __GLOBALS_H__
-
+#ifndef _GLOBALS_H_
+#define _GLOBALS_H_
 #include <SDL_rect.h>
 
 #define LOG(format, ...) log(__FILE__, __LINE__, format, __VA_ARGS__);
@@ -43,9 +42,4 @@ enum update_status {
 #define VSYNC true
 #define TITLE "Candy Crush"
 
-#define LAYER_FRONT 0.67F
-#define LAYER_MIDDLE 0.62F
-#define LAYER_BACK 0.5F
-#define LAYER_HUD 0.F
-
-#endif //__GLOBALS_H__
+#endif 

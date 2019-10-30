@@ -1,8 +1,6 @@
-#ifndef __MODULEFADETOBLACK_H__
-#define __MODULEFADETOBLACK_H__
-
+#ifndef _MODULEFADETOBLACK_H_
+#define _MODULEFADETOBLACK_H_
 #include "Module.h"
-#include "Globals.h"
 
 class ModuleFadeToBlack : public Module {
 public:
@@ -15,12 +13,11 @@ public:
 	bool isFading() const;
 
 private:
-
-	Uint32 start_time = 0;
-	Uint32 total_time = 0;
-	bool fading_in = true;
-	Module* module_on = nullptr;
-	Module* module_off = nullptr;
+	Uint32 startTime = 0;
+	Uint32 totalTime = 0;
+	bool fadingIn = true;
+	Module* moduleOn = nullptr;
+	Module* moduleOff = nullptr;
 };
 
-#endif // __MODULEFADETOBLACK_H__
+#endif 

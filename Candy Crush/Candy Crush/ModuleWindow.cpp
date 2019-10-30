@@ -1,16 +1,16 @@
-#include "Globals.h"
-#include "Application.h"
 #include "ModuleWindow.h"
+#include "Application.h"
 #include <SDL.h>
+#include <SDL_image.h>
+
+#define ICON "Game/icon.png"
 
 ModuleWindow::ModuleWindow() {
 }
 
-// Destructor
 ModuleWindow::~ModuleWindow() {
 }
 
-// Called before render is available
 bool ModuleWindow::Init() {
 	LOG("Init SDL window & surface");
 	bool ret = true;
@@ -20,41 +20,42 @@ bool ModuleWindow::Init() {
 		ret = false;
 	}
 	else {
-		//Create window
-		int width = SCREEN_WIDTH * SCREEN_SIZE;
-		int height = SCREEN_HEIGHT * SCREEN_SIZE;
-		Uint32 flags = SDL_WINDOW_SHOWN;
+		// Create window
+		int width = SCREEN_WIDTH/*_INTRO*/ * SCREEN_SIZE;
+		int height = SCREEN_HEIGHT/*_INTRO*/ * SCREEN_SIZE;
+		Uint32 flags = SDL_WINDOW_SHOWN /*| SDL_WINDOW_BORDERLESS*/;
 
 		if (FULLSCREEN == true) {
 			flags |= SDL_WINDOW_FULLSCREEN;
 		}
 
-		window = SDL_CreateWindow(TITLE, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, flags);
+		window = SDL_CreateWindow(TITLE, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, flags);
 
 		if (window == nullptr) {
 			LOG("Window could not be created! SDL_Error: %s\n", SDL_GetError());
 			ret = false;
 		}
 		else {
-			//Get window surface
-			screen_surface = SDL_GetWindowSurface(window);
+			// Get window surface
+			screenSurface = SDL_GetWindowSurface(window);
+
+			SDL_Surface *iconSurface = IMG_Load(ICON);
+			SDL_SetWindowIcon(window, iconSurface);
 		}
 	}
 
 	return ret;
 }
 
-// Called before quitting
 bool ModuleWindow::CleanUp() {
 	LOG("Destroying SDL window and quitting all SDL systems");
 
-	//Destroy window
+	// Destroy window
 	if (window != nullptr) {
 		SDL_DestroyWindow(window);
 	}
 
-	//Quit SDL subsystems
+	// Quit SDL subsystems
 	SDL_Quit();
 	return true;
 }
-

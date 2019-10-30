@@ -1,13 +1,12 @@
-#ifndef __MODULE_H__
-#define __MODULE_H__
+#ifndef _MODULE_H_
+#define _MODULE_H_
+#include "Globals.h"
 
 class Application;
 
 class Module {
 public:
-
 	Module(bool active = true) : active(active) {}
-
 	virtual ~Module() {}
 
 	bool IsEnabled() const {
@@ -15,17 +14,11 @@ public:
 	}
 
 	bool Enable() {
-		if (!active)
-			return active = Start();
-
-		return true;
+		return !active ? active = Start() : true;
 	}
 
 	bool Disable() {
-		if (active == true)
-			return active = !CleanUp();
-
-		return true;
+		return active ? active = !CleanUp() : true;
 	}
 
 	virtual bool Init() {
@@ -60,4 +53,4 @@ private:
 	bool active = true;
 };
 
-#endif // __MODULE_H__
+#endif 

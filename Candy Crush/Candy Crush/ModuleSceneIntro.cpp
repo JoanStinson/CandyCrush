@@ -1,7 +1,6 @@
-#include "Globals.h"
+#include "ModuleSceneIntro.h"
 #include "Application.h"
 #include "ModuleSceneGame.h"
-#include "ModuleSceneIntro.h"
 #include "ModuleRender.h"
 #include "ModuleTextures.h"
 #include "ModuleInput.h"
@@ -13,6 +12,11 @@
 #include "CEV_gifDeflate.h"
 #include "CEV_gifToSurface.h"
 
+#define GIF_CINEMATIC "Game/cinematic.gif"
+#define GIF_GIRL "Game/girl.gif"
+#define SPRITE_MAIN_MENU "Game/main menu.jpg"
+#define MUSIC_MAIN_MENU "Game/main menu.ogg"
+
 bool ModuleSceneIntro::hasPlayedIntro = false;
 int ModuleSceneIntro::counter = 0;
 
@@ -23,38 +27,34 @@ ModuleSceneIntro::ModuleSceneIntro(bool start_enabled) : Module(start_enabled) {
 ModuleSceneIntro::~ModuleSceneIntro() {
 }
 
-// Load assets
 bool ModuleSceneIntro::Start() {
 	LOG("Loading intro scene");
 
 	if (!hasPlayedIntro) {
-		cinematic.anim = CEV_gifAnimLoad("Game/cinematic.gif", App->renderer->renderer);
+		cinematic.anim = CEV_gifAnimLoad(GIF_CINEMATIC, App->renderer->renderer);
 		cinematic.texture = CEV_gifTexture(cinematic.anim);
 		CEV_gifLoopMode(cinematic.anim, GIF_ONCE_FOR);
 	}
 	else {
 		SDL_SetWindowSize(App->window->window, SCREEN_WIDTH, SCREEN_HEIGHT);
-		girl.anim = CEV_gifAnimLoad("Game/girl.gif", App->renderer->renderer);
+		SDL_SetWindowPosition(App->window->window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
+		girl.anim = CEV_gifAnimLoad(GIF_GIRL, App->renderer->renderer);
 		girl.texture = CEV_gifTexture(girl.anim);
 		CEV_gifLoopMode(girl.anim, GIF_REPEAT_FOR);
 
-		graphics = App->textures->LoadImage("Game/main menu.jpg");
-		App->audio->PlayMusic("Game/main menu.ogg");
+		graphics = App->textures->LoadImage(SPRITE_MAIN_MENU);
+		App->audio->PlayMusic(MUSIC_MAIN_MENU);
 	}
 
 	return true;
 }
 
-// UnLoad assets
 bool ModuleSceneIntro::CleanUp() {
 	LOG("Unloading intro scene");
-
 	App->textures->Unload(graphics);
-
 	return true;
 }
 
-// Update: draw background
 update_status ModuleSceneIntro::Update() {
 
 	static float cinematicTime = 6.5F;
@@ -70,7 +70,7 @@ update_status ModuleSceneIntro::Update() {
 		if (counter >= cinematicTime) {
 			hasPlayedIntro = true;
 			SDL_SetWindowSize(App->window->window, SCREEN_WIDTH, SCREEN_HEIGHT);
-			App->fade->FadeToBlack(App->scene_intro, App->scene_intro, 3.0F);
+			App->fade->FadeToBlack(App->sceneIntro, App->sceneIntro, 3.0F);
 			return UPDATE_CONTINUE;
 		}
 		else {
@@ -86,7 +86,7 @@ update_status ModuleSceneIntro::Update() {
 	}
 
 	if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN || App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) {
-		App->fade->FadeToBlack(App->scene_game, App->scene_intro, 3.0F);
+		App->fade->FadeToBlack(App->sceneGame, App->sceneIntro, 3.0F);
 		SDL_SetWindowSize(App->window->window, SCREEN_WIDTH, SCREEN_HEIGHT);
 	}
 

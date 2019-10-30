@@ -1,19 +1,15 @@
-#include "Globals.h"
-#include "Application.h"
 #include "ModuleAudio.h"
+#include "Application.h"
 #include <SDL.h>
 #include <SDL_mixer.h>
 #pragma comment( lib, "SDL2_mixer/lib/x86/SDL2_mixer.lib" )
-using namespace std;
 
 ModuleAudio::ModuleAudio(bool start_enabled) : Module(start_enabled) {
 }
 
-// Destructor
 ModuleAudio::~ModuleAudio() {
 }
 
-// Called before render is available
 bool ModuleAudio::Init() {
 	LOG("Loading Audio Mixer");
 	bool ret = true;
@@ -24,7 +20,7 @@ bool ModuleAudio::Init() {
 		ret = false;
 	}
 
-	// load support for the OGG format
+	// Load support for the OGG format
 	int flags = MIX_INIT_OGG;
 	int init = Mix_Init(flags);
 
@@ -33,7 +29,7 @@ bool ModuleAudio::Init() {
 		ret = false;
 	}
 
-	//Initialize SDL_mixer
+	// Initialize SDL_mixer
 	if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
 		LOG("SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError());
 		ret = false;
@@ -42,7 +38,6 @@ bool ModuleAudio::Init() {
 	return ret;
 }
 
-// Called before quitting
 bool ModuleAudio::CleanUp() {
 	LOG("Freeing sound FX, closing Mixer and Audio subsystem");
 
@@ -50,7 +45,7 @@ bool ModuleAudio::CleanUp() {
 		Mix_FreeMusic(music);
 	}
 
-	for (vector<Mix_Chunk*>::iterator it = fx.begin(); it != fx.end(); ++it)
+	for (std::vector<Mix_Chunk*>::iterator it = fx.begin(); it != fx.end(); ++it)
 		Mix_FreeChunk(*it);
 
 	fx.clear();
@@ -60,7 +55,6 @@ bool ModuleAudio::CleanUp() {
 	return true;
 }
 
-// Play a music file
 bool ModuleAudio::PlayMusic(const char* path, float fade_time) {
 	bool ret = true;
 
@@ -101,7 +95,6 @@ bool ModuleAudio::PlayMusic(const char* path, float fade_time) {
 	return ret;
 }
 
-// Load WAV
 unsigned int ModuleAudio::LoadFx(const char* path) {
 	unsigned int ret = 0;
 	Mix_Chunk* chunk = Mix_LoadWAV(path);
@@ -117,7 +110,6 @@ unsigned int ModuleAudio::LoadFx(const char* path) {
 	return ret;
 }
 
-// Play WAV
 bool ModuleAudio::PlayFx(unsigned int id, int repeat) {
 	bool ret = false;
 

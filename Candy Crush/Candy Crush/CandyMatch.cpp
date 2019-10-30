@@ -5,25 +5,24 @@ CandyMatch::CandyMatch() : match(Match::NONE) {
 }
 
 CandyMatch::CandyMatch(Match match, int xBegin, int xEnd, int yBegin, int yEnd) : match(match), xBegin(xBegin), xEnd(xEnd), yBegin(yBegin), yEnd(yEnd) {
-
 }
 
-Match CandyMatch::GetMatch() {
+Match CandyMatch::GetMatch() const {
 	return match;
 }
 
-int CandyMatch::GetXBegin() {
+int CandyMatch::GetXBegin() const {
 	return xBegin;
 }
 
-int CandyMatch::GetXEnd() {
+int CandyMatch::GetXEnd() const {
 	return xEnd;
 }
 
-int CandyMatch::GetYBegin() {
+int CandyMatch::GetYBegin() const {
 	return yBegin;
 }
 
-int CandyMatch::GetYEnd() {
+int CandyMatch::GetYEnd() const {
 	return yEnd;
 }

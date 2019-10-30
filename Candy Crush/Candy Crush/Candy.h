@@ -1,6 +1,6 @@
-#pragma once
+#ifndef _CANDY_H_
+#define _CANDY_H_
 #include "Point.h"
-#include <SDL.h>
 
 #define CANDY_TYPES 6
 
@@ -18,3 +18,5 @@ private:
 	iPoint pos;
 	CandyType type;
 };
+
+#endif

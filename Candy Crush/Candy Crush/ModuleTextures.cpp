@@ -1,29 +1,20 @@
-#include "Globals.h"
+#include "ModuleTextures.h"
 #include "Application.h"
 #include "ModuleRender.h"
-#include "ModuleTextures.h"
-#include <SDL.h>
-#include <SDL_image.h>
-#include <SDL_ttf.h>
-#pragma comment( lib, "SDL2_image/lib/x86/SDL2_image.lib" )
-#pragma comment( lib, "SDL2_ttf/lib/x86/SDL2_ttf.lib" )
-using namespace std;
 
 ModuleTextures::ModuleTextures() {
 }
 
-// Destructor
 ModuleTextures::~ModuleTextures() {
 	IMG_Quit();
 	TTF_Quit();
 }
 
-// Called before render is available
 bool ModuleTextures::Init() {
 	LOG("Init Image library");
 	bool ret = true;
 
-	// load support for the PNG image format
+	// Load support for the PNG image format
 	int flags = IMG_INIT_PNG;
 	int init = IMG_Init(flags);
 
@@ -41,18 +32,16 @@ bool ModuleTextures::Init() {
 	return ret;
 }
 
-// Called before quitting
 bool ModuleTextures::CleanUp() {
 	LOG("Freeing textures and Image library");
 
-	for (list<SDL_Texture*>::iterator it = textures.begin(); it != textures.end(); ++it)
+	for (std::list<SDL_Texture*>::iterator it = textures.begin(); it != textures.end(); ++it)
 		SDL_DestroyTexture(*it);
 
 	textures.clear();
 	return true;
 }
 
-// Load new texture from file path
 SDL_Texture* const ModuleTextures::LoadImage(const char* path) {
 	SDL_Texture* texture = nullptr;
 	SDL_Surface* surface = IMG_Load(path);
@@ -76,18 +65,7 @@ SDL_Texture* const ModuleTextures::LoadImage(const char* path) {
 	return texture;
 }
 
-// Free texture from memory
-void ModuleTextures::Unload(SDL_Texture* texture) {
-	for (list<SDL_Texture*>::iterator it = textures.begin(); it != textures.end(); ++it) {
-		if (*it == texture) {
-			SDL_DestroyTexture(*it);
-			textures.erase(it);
-			break;
-		}
-	}
-}
-
-SDL_Texture* const ModuleTextures::LoadText(const char *text, SDL_Color &textColor, int size, bool bold, const char *fontPath) {
+SDL_Texture* const ModuleTextures::LoadText(const char *text, int size, SDL_Color &textColor, bool bold, const char *fontPath) {
 	SDL_Texture* texture = nullptr;
 	SDL_Surface* surface = nullptr;
 	TTF_Font *font = TTF_OpenFont(fontPath, size);
@@ -97,7 +75,7 @@ SDL_Texture* const ModuleTextures::LoadText(const char *text, SDL_Color &textCol
 	}
 	else {
 		if (bold) TTF_SetFontStyle(font, TTF_STYLE_BOLD);
-		surface = TTF_RenderText_Solid(font, text, textColor);
+		surface = TTF_RenderText_Blended(font, text, textColor);
 
 		if (surface == nullptr) {
 			LOG("Unable to render text surface! SDL_ttf Error: %s\n", TTF_GetError());
@@ -117,4 +95,14 @@ SDL_Texture* const ModuleTextures::LoadText(const char *text, SDL_Color &textCol
 	}
 
 	return texture;
+}
+
+void ModuleTextures::Unload(SDL_Texture* texture) {
+	for (std::list<SDL_Texture*>::iterator it = textures.begin(); it != textures.end(); ++it) {
+		if (*it == texture) {
+			SDL_DestroyTexture(*it);
+			textures.erase(it);
+			break;
+		}
+	}
 }

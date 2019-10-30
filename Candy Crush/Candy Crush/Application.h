@@ -1,9 +1,7 @@
-#ifndef __APPLICATION_CPP__
-#define __APPLICATION_CPP__
-
-#include <list>
-#include "Globals.h"
+#ifndef _APPLICATION_H_
+#define _APPLICATION_H_
 #include "Module.h"
+#include <list>
 
 class ModuleRender;
 class ModuleWindow;
@@ -12,12 +10,22 @@ class ModuleInput;
 class ModuleAudio;
 class ModuleFadeToBlack;
 class ModulePlayer;
-class ModuleSceneGame;
 class ModuleSceneIntro;
+class ModuleSceneGame;
 
 class Application {
 public:
+	ModuleRender *renderer = nullptr;
+	ModuleWindow *window = nullptr;
+	ModuleTextures *textures = nullptr;
+	ModuleInput *input = nullptr;
+	ModuleAudio *audio = nullptr;
+	ModuleFadeToBlack *fade = nullptr;
+	ModulePlayer *player = nullptr;
+	ModuleSceneIntro *sceneIntro = nullptr;
+	ModuleSceneGame *sceneGame = nullptr;
 
+public:
 	Application();
 	~Application();
 
@@ -25,23 +33,10 @@ public:
 	update_status Update();
 	bool CleanUp();
 
-public:
-	ModuleRender* renderer;
-	ModuleWindow* window;
-	ModuleTextures* textures;
-	ModuleInput* input;
-	ModuleAudio* audio;
-	ModuleFadeToBlack* fade;
-	ModulePlayer* player;
-	ModuleSceneGame* scene_game;
-	ModuleSceneIntro* scene_intro;
-
 private:
-
 	std::list<Module*> modules;
-
 };
 
 extern Application* App;
 
-#endif // __APPLICATION_CPP__
+#endif 

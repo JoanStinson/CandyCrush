@@ -1,6 +1,5 @@
-#include "Globals.h"
-#include "Application.h"
 #include "ModuleRender.h"
+#include "Application.h"
 #include "ModuleWindow.h"
 #include "ModuleInput.h"
 #include "ModuleSceneIntro.h"
@@ -10,11 +9,9 @@ ModuleRender::ModuleRender() {
 	ResetCamera();
 }
 
-// Destructor
 ModuleRender::~ModuleRender() {
 }
 
-// Called before render is available
 bool ModuleRender::Init() {
 	LOG("Creating Renderer context");
 	bool ret = true;
@@ -40,25 +37,7 @@ update_status ModuleRender::PreUpdate() {
 	return UPDATE_CONTINUE;
 }
 
-// Called every draw update
 update_status ModuleRender::Update() {
-	//if (!App->scene_intro->IsEnabled()) {
-	//	// debug camera
-	//	int speed = 1;
-
-	//	if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
-	//		App->renderer->camera.y += speed;
-
-	//	if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
-	//		App->renderer->camera.y -= speed;
-
-	//	if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
-	//		App->renderer->camera.x += speed;
-
-	//	if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
-	//		App->renderer->camera.x -= speed;
-	//}
-
 	return UPDATE_CONTINUE;
 }
 
@@ -67,7 +46,6 @@ update_status ModuleRender::PostUpdate() {
 	return UPDATE_CONTINUE;
 }
 
-// Called before quitting
 bool ModuleRender::CleanUp() {
 	LOG("Destroying renderer");
 
@@ -79,7 +57,6 @@ bool ModuleRender::CleanUp() {
 	return true;
 }
 
-// Blit to screen
 bool ModuleRender::Blit(SDL_Texture* texture, int x, int y, SDL_Rect* section, float speed) {
 	bool ret = true;
 	SDL_Rect rect;

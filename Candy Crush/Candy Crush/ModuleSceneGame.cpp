@@ -1,12 +1,20 @@
-#include "Application.h"
 #include "ModuleSceneGame.h"
+#include "Application.h"
 #include "ModuleSceneIntro.h"
-#include "ModuleRender.h"
 #include "ModuleTextures.h"
-
+#include "ModuleRender.h"
 #include "ModuleAudio.h"
+#include "ModuleInput.h"
 #include "ModuleFadeToBlack.h"
 #include <SDL.h>
+#include <string>
+
+#define SPRITE_LEVEL "Game/level.jpg"
+#define SPRITE_CANDIES "Game/candy spritesheet.png"
+#define MUSIC_LEVEL "Game/level.ogg"
+#define CANDY_SIZE 62
+#define XOFFSET 30
+#define YOFFSET 120
 
 ModuleSceneGame::ModuleSceneGame(bool start_enabled) : Module(start_enabled) {
 	background = { 0, 0, 375, 667 };
@@ -16,17 +24,19 @@ ModuleSceneGame::~ModuleSceneGame() {
 	delete candyGrid;
 }
 
-// Load assets
 bool ModuleSceneGame::Start() {
 	LOG("Loading game scene");
 	candyGrid = new CandyGrid(ROWS, COLS);
-	backgroundTexture = App->textures->LoadImage("Game/level1.jpg");
-	candiesTexture = App->textures->LoadImage("Game/candy spritesheet.png");
-	App->audio->PlayMusic("Game/level1.ogg");
+	backgroundTexture = App->textures->LoadImage(SPRITE_LEVEL);
+	candiesTexture = App->textures->LoadImage(SPRITE_CANDIES);
+	App->audio->PlayMusic(MUSIC_LEVEL);
+	targetText = new Text(App->textures->LoadText("Target: "));
+	targetNumText = new Text(App->textures->LoadText(std::to_string(TARGET).c_str()));
+	movesText = new Text(App->textures->LoadText("Moves: ", 20));
+	scoreText = new Text(App->textures->LoadText("Score: "));
 	return true;
 }
 
-// UnLoad assets
 bool ModuleSceneGame::CleanUp() {
 	LOG("Unloading game scene");
 	App->textures->Unload(backgroundTexture);
@@ -82,12 +92,12 @@ void ModuleSceneGame::OnMouseUnClick(iPoint mousePos) {
 		Candy *nextCandy = GetNextCandy(selectedCandy, move);
 
 		if (nextCandy != nullptr) {
+			--moves;
+
 			CandyType type = selectedCandy->GetType();
 			iPoint pos = nextCandy->GetPos();
 
 			CandyMatch match = candyGrid->CheckMatch(type, pos);
-			printf("%d\n", match);
-
 			HandleMatch(selectedCandy, nextCandy, match);
 		}
 
@@ -127,55 +137,56 @@ Candy* ModuleSceneGame::GetNextCandy(Candy *selectedCandy, MouseMove move) {
 void ModuleSceneGame::HandleMatch(Candy *selectedCandy, Candy *nextCandy, CandyMatch match) {
 
 	if (match.GetMatch() != Match::NONE) {
-
+		// Swap candies
 		candyGrid->Swap(selectedCandy->GetPos(), nextCandy->GetPos());
 
-		switch (match.GetMatch()) {
-		case Match::COL:
-			candyGrid->ClearMatchedCol(selectedCandy->GetPos().y, match.GetXBegin(), match.GetXEnd());
-			break;
+		// Clear candies
+		candyGrid->ClearFromMatch(selectedCandy, match);
 
-		case Match::ROW:
-			candyGrid->ClearMatchedRow(selectedCandy->GetPos().x, match.GetYBegin(), match.GetYEnd());
-			break;
-
-		case Match::BOTH:
-			candyGrid->ClearMatchedCol(selectedCandy->GetPos().y, match.GetXBegin(), match.GetXEnd());
-			candyGrid->ClearMatchedRow(selectedCandy->GetPos().x, match.GetYBegin(), match.GetYEnd());
-			break;
-		}
+		// Clear grid
+		//bool matched = true;
+		//while (matched) {
+		candyGrid->ClearGrid();
+		//}
 	}
-
-	//TODO clear grid
 }
 
-// Update: draw background
 update_status ModuleSceneGame::Update() {
 
 	// Draw background
-	App->renderer->Blit(backgroundTexture, 0, 0, &background, LAYER_BACK);
+	App->renderer->Blit(backgroundTexture, 0, 0, &background);
 
 	// Draw candies
-	for (int i = 0; i < ROWS; ++i) {
-		for (int j = 0; j < COLS; ++j) {
-			Candy *candy = candyGrid->Get(iPoint(i, j));
-			App->renderer->Blit(candiesTexture, (CANDY_SIZE * j) + XOFFSET, (CANDY_SIZE * i) + YOFFSET, &GetRectFromCandy(candy), LAYER_FRONT);
-		}
-	}
+	for (int i = 0; i < ROWS; ++i)
+		for (int j = 0; j < COLS; ++j)
+			App->renderer->Blit(candiesTexture, (CANDY_SIZE * j) + XOFFSET, (CANDY_SIZE * i) + YOFFSET, &GetRectFromCandy(candyGrid->Get(iPoint(i, j))));
+
+	// Draw text
+	App->renderer->Blit(targetText->texture, (SCREEN_WIDTH / 2) - (targetText->rect.w / 2) + 60, 13, &targetText->rect);
+	App->renderer->Blit(targetNumText->texture, (SCREEN_WIDTH / 2) - (targetNumText->rect.w / 2) + 130, 13, &targetNumText->rect);
+	App->renderer->Blit(movesText->texture, (SCREEN_WIDTH / 2) - 42, SCREEN_HEIGHT - 97, &movesText->rect);
+	moves < 10 ? movesNumText = new Text(App->textures->LoadText((std::to_string(0) + std::to_string(moves)).c_str(), 26)) : movesNumText = new Text(App->textures->LoadText(std::to_string(moves).c_str(), 26));
+	App->renderer->Blit(movesNumText->texture, (SCREEN_WIDTH / 2) - 25, SCREEN_HEIGHT - 80, &movesNumText->rect);
+	App->renderer->Blit(scoreText->texture, (SCREEN_WIDTH / 2) + 87, SCREEN_HEIGHT - 100, &scoreText->rect);
+	score < 10 ? scoreNumText = new Text(App->textures->LoadText((std::to_string(0) + std::to_string(0) + std::to_string(0) + std::to_string(0) + std::to_string(score)).c_str(), 30)) :
+		score < 100 ? scoreNumText = new Text(App->textures->LoadText((std::to_string(0) + std::to_string(0) + std::to_string(0) + std::to_string(score)).c_str(), 30)) :
+		score < 1000 ? scoreNumText = new Text(App->textures->LoadText((std::to_string(0) + std::to_string(0) + std::to_string(score)).c_str(), 30)) :
+		score < 10000 ? scoreNumText = new Text(App->textures->LoadText((std::to_string(0) + std::to_string(score)).c_str(), 30)) : scoreNumText = new Text(App->textures->LoadText((std::to_string(score)).c_str(), 30));
+	App->renderer->Blit(scoreNumText->texture, (SCREEN_WIDTH / 2) + 80, SCREEN_HEIGHT - 80, &scoreNumText->rect);
 
 	// Mouse events
-	if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN)
-		OnMouseClick(App->input->GetMousePosition());
-	else if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_UP)
-		OnMouseUnClick(App->input->GetMousePosition());
+	App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN ? OnMouseClick(App->input->GetMousePosition()) :
+		App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_UP ? OnMouseUnClick(App->input->GetMousePosition()) : NULL;
 
 	// Change scene
 	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
-		App->fade->FadeToBlack(App->scene_intro, App->scene_game, 3.0F);
+		App->fade->FadeToBlack(App->sceneIntro, App->sceneGame, 3.0F);
 
 	return UPDATE_CONTINUE;
 }
 
 update_status ModuleSceneGame::LateUpdate() {
+	delete movesNumText;
+	delete scoreNumText;
 	return UPDATE_CONTINUE;
 }
