@@ -5,6 +5,7 @@
 #include "ModuleRender.h"
 #include "ModuleAudio.h"
 #include "ModuleInput.h"
+#include "ModuleWindow.h"
 #include "ModuleFadeToBlack.h"
 #include <SDL.h>
 #include <string>
@@ -34,6 +35,15 @@ bool ModuleSceneGame::Start() {
 	targetNumText = new Text(App->textures->LoadText(std::to_string(TARGET).c_str()));
 	movesText = new Text(App->textures->LoadText("Moves: ", 20));
 	scoreText = new Text(App->textures->LoadText("Score: "));
+	gameOverText = new Text(App->textures->LoadText("Game Over", 50, SDL_Color{ 255, 0, 255 }));
+	winText = new Text(App->textures->LoadText("You Win!", 50, SDL_Color{ 255, 255, 0 }));
+
+	SDL_Rect bg = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
+	SDL_Surface *s = SDL_CreateRGBSurface(0, SCREEN_WIDTH, SCREEN_HEIGHT, 32, 0, 0, 0, 0);
+	SDL_FillRect(s, &bg, SDL_MapRGB(s->format, 0, 0, 0));
+	bgTexture = SDL_CreateTextureFromSurface(App->renderer->renderer, s);
+	SDL_SetTextureBlendMode(bgTexture, SDL_BLENDMODE_BLEND);
+	SDL_SetTextureAlphaMod(bgTexture, 200);
 	return true;
 }
 
@@ -75,7 +85,7 @@ void ModuleSceneGame::OnMouseClick(iPoint mousePos) {
 	const int xEnd = (CANDY_SIZE * COLS) + XOFFSET;
 	const int yEnd = (CANDY_SIZE * ROWS) + YOFFSET;
 
-	if (mousePos.x >= XOFFSET && mousePos.x <= xEnd && mousePos.y >= YOFFSET && mousePos.y <= yEnd) {
+	if (mousePos.x >= XOFFSET && mousePos.x <= xEnd && mousePos.y >= YOFFSET && mousePos.y <= yEnd && !win && !gameOver) {
 		selectedPoint = new iPoint(mousePos);
 	}
 }
@@ -99,6 +109,10 @@ void ModuleSceneGame::OnMouseUnClick(iPoint mousePos) {
 
 			CandyMatch match = candyGrid->CheckMatch(type, pos);
 			HandleMatch(selectedCandy, nextCandy, match);
+		}
+
+		if (moves == 0) {
+			gameOver = true;
 		}
 
 		selectedPoint = nullptr;
@@ -143,6 +157,12 @@ void ModuleSceneGame::HandleMatch(Candy *selectedCandy, Candy *nextCandy, CandyM
 		// Clear candies
 		candyGrid->ClearFromMatch(selectedCandy, match);
 
+		// Update score
+		score += candyScore.GetScore(match.GetMatches().x);
+		score += candyScore.GetScore(match.GetMatches().y);
+		if (score >= TARGET)
+			win = true;
+
 		// Clear grid
 		//bool matched = true;
 		//while (matched) {
@@ -178,6 +198,17 @@ update_status ModuleSceneGame::Update() {
 	App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN ? OnMouseClick(App->input->GetMousePosition()) :
 		App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_UP ? OnMouseUnClick(App->input->GetMousePosition()) : NULL;
 
+	// Win screen
+	if (win) {
+		App->renderer->Blit(bgTexture, 0, 0, NULL);
+		App->renderer->Blit(winText->texture, (SCREEN_WIDTH / 2) - (targetText->rect.w / 2) - targetText->rect.w, (SCREEN_HEIGHT / 2) - (targetText->rect.h / 2), &winText->rect);
+	}
+	// Game over screen
+	else if (gameOver) {
+		App->renderer->Blit(bgTexture, 0, 0, NULL);
+		App->renderer->Blit(gameOverText->texture, (SCREEN_WIDTH / 2) - (targetText->rect.w / 2) - targetText->rect.w, (SCREEN_HEIGHT / 2) - (targetText->rect.h / 2), &gameOverText->rect);
+	}
+
 	// Change scene
 	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
 		App->fade->FadeToBlack(App->sceneIntro, App->sceneGame, 3.0F);
@@ -189,4 +220,16 @@ update_status ModuleSceneGame::LateUpdate() {
 	delete movesNumText;
 	delete scoreNumText;
 	return UPDATE_CONTINUE;
+}
+
+void ModuleSceneGame::Initialize() {
+	candyGrid = new CandyGrid(ROWS, COLS);
+	moves = MAX_MOVES;
+	score = 0;
+	gameOver = false;
+	win = false;
+}
+
+void ModuleSceneGame::OnRetryClick() {
+	Initialize();
 }

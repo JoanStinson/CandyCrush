@@ -77,6 +77,7 @@
     <ClInclude Include="Candy.h" />
     <ClInclude Include="CandyGrid.h" />
     <ClInclude Include="CandyMatch.h" />
+    <ClInclude Include="CandyScore.h" />
     <ClInclude Include="CEV_gif.h" />
     <ClInclude Include="CEV_gifDeflate.h" />
     <ClInclude Include="CEV_gifToSurface.h" />
@@ -97,6 +98,7 @@
     <ClCompile Include="Candy.cpp" />
     <ClCompile Include="CandyGrid.cpp" />
     <ClCompile Include="CandyMatch.cpp" />
+    <ClCompile Include="CandyScore.cpp" />
     <ClCompile Include="CEV_gifDeflate.c" />
     <ClCompile Include="CEV_gifToSurface.c" />
     <ClCompile Include="CEV_gifUser.c" />

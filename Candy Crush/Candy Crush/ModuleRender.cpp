@@ -28,6 +28,8 @@ bool ModuleRender::Init() {
 		ret = false;
 	}
 
+	//SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+
 	return ret;
 }
 

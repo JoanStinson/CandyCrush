@@ -4,13 +4,15 @@
 #include "Animation.h"
 #include "CandyGrid.h"
 #include "CandyMatch.h"
+#include "CandyScore.h"
 
 #define ROWS 6
 #define COLS 5
 #define MAX_MOVES 20
-#define TARGET 4000
+#define TARGET 1000
 
 struct SDL_Texture;
+struct SDL_Rect;
 struct Text;
 typedef enum class MouseMove;
 
@@ -18,6 +20,7 @@ class ModuleSceneGame : public Module {
 public:
 	ModuleSceneGame(bool start_enabled = true);
 	~ModuleSceneGame();
+
 
 	bool Start() override;
 	update_status Update() override;
@@ -36,8 +39,16 @@ private:
 	Text *movesNumText = nullptr;
 	Text *scoreText = nullptr;
 	Text *scoreNumText = nullptr;
+	Text *gameOverText = nullptr;
+	Text *winText = nullptr;
 	int moves = MAX_MOVES;
 	int score = 0;
+	bool gameOver = false;
+	bool win = false;
+
+	SDL_Texture *bgTexture = nullptr;
+
+	CandyScore candyScore;
 
 private:
 	SDL_Rect GetRectFromCandy(Candy *candy);
@@ -45,6 +56,9 @@ private:
 	void OnMouseUnClick(iPoint mousePos);
 	Candy* GetNextCandy(Candy *selectedCandy, MouseMove move);
 	void HandleMatch(Candy *selectedCandy, Candy *nextCandy, CandyMatch match);
+
+	void Initialize();
+	void OnRetryClick();
 };
 
 #endif 

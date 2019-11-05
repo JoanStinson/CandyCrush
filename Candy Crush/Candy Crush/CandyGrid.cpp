@@ -80,10 +80,10 @@ CandyMatch CandyGrid::CheckMatch(CandyType type, iPoint pos) {
 	yBegin = yEnd = pos.y;
 
 	// CHECK LEFT
-	int matches = 1;
+	int xMatches = 1;
 	for (int j = pos.y - 1; j >= 0; --j) {
 		if (grid[pos.x][j]->GetType() == type) {
-			++matches;
+			++xMatches;
 			yBegin = j;
 		}
 		else {
@@ -94,7 +94,7 @@ CandyMatch CandyGrid::CheckMatch(CandyType type, iPoint pos) {
 	// CHECK RIGHT
 	for (int j = pos.y + 1; j < cols; ++j) {
 		if (grid[pos.x][j]->GetType() == type) {
-			++matches;
+			++xMatches;
 			yEnd = j;
 		}
 		else {
@@ -102,17 +102,18 @@ CandyMatch CandyGrid::CheckMatch(CandyType type, iPoint pos) {
 		}
 	}
 
-	if (matches >= MIN_MATCHES) {
+	if (xMatches >= MIN_MATCHES) {
 		match = CandyMatch(Match::ROW, -1, -1, yBegin, yEnd);
+		match.SetMatches(iPoint(xMatches, 0));
 	}
 
 	xBegin = xEnd = pos.x;
 
 	// CHECK UP
-	matches = 1;
+	int yMatches = 1;
 	for (int j = pos.x - 1; j >= 0; --j) {
 		if (grid[j][pos.y]->GetType() == type) {
-			++matches;
+			++yMatches;
 			xBegin = j;
 		}
 		else {
@@ -123,7 +124,7 @@ CandyMatch CandyGrid::CheckMatch(CandyType type, iPoint pos) {
 	// CHECK DOWN
 	for (int j = pos.x + 1; j < rows; ++j) {
 		if (grid[j][pos.y]->GetType() == type) {
-			++matches;
+			++yMatches;
 			xEnd = j;
 		}
 		else {
@@ -131,10 +132,15 @@ CandyMatch CandyGrid::CheckMatch(CandyType type, iPoint pos) {
 		}
 	}
 
-	if (matches >= MIN_MATCHES) {
-		if (match.GetMatch() == Match::ROW)
+	if (yMatches >= MIN_MATCHES) {
+		if (match.GetMatch() == Match::ROW) {
 			match = CandyMatch(Match::BOTH, xBegin, xEnd, yBegin, yEnd);
-		else match = CandyMatch(Match::COL, xBegin, xEnd, -1, -1);
+			match.SetMatches(iPoint(xMatches, yMatches));
+		}
+		else {
+			match = CandyMatch(Match::COL, xBegin, xEnd, -1, -1);
+			match.SetMatches(iPoint(0, yMatches));
+		}
 	}
 
 	return match;
