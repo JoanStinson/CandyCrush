@@ -2,7 +2,9 @@
 
 A simple Candy Crush implementation using a 2D game engine architecture with C++ and SDL (MVC pattern).
 
-![](preview.gif)
+<p align="center">
+  <img width="370" height="661" src="https://github.com/JoanStinson/CandyCrush/blob/master/preview.gif">
+ </p>
 
 ## Installation
 
@@ -27,7 +29,7 @@ A simple Candy Crush implementation using a 2D game engine architecture with C++
 
 Currently in WIP! Available features:
 - Intro cinematic
-- Initial grdi of candies generation from file
+- Initial grid of candies generation from file
 - Candy swap
 - Candy grid clear
 - Score, moves and target with textures
