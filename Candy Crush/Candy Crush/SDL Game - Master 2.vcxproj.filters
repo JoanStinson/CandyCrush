@@ -82,6 +82,9 @@
     <ClInclude Include="CandyScore.h">
       <Filter>Data</Filter>
     </ClInclude>
+    <ClInclude Include="SDL_Button.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -137,6 +140,9 @@
     </ClCompile>
     <ClCompile Include="CandyScore.cpp">
       <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="SDL_Button.cpp">
+      <Filter>Utils</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

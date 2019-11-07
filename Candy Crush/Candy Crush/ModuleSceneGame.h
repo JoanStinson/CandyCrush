@@ -5,6 +5,7 @@
 #include "CandyGrid.h"
 #include "CandyMatch.h"
 #include "CandyScore.h"
+#include "SDL_Button.h"
 
 #define ROWS 6
 #define COLS 5
@@ -49,6 +50,9 @@ private:
 	SDL_Texture *bgTexture = nullptr;
 
 	CandyScore candyScore;
+
+	SDL_Button_t *retryButton = nullptr;
+	SDL_Texture *buttonTexture = nullptr;
 
 private:
 	SDL_Rect GetRectFromCandy(Candy *candy);

@@ -22,7 +22,18 @@ ModuleSceneGame::ModuleSceneGame(bool start_enabled) : Module(start_enabled) {
 }
 
 ModuleSceneGame::~ModuleSceneGame() {
+
 	delete candyGrid;
+	delete selectedPoint;
+	delete targetText;
+	delete targetNumText;
+	delete movesText;
+	//delete movesNumText;
+	delete scoreText;
+	//delete scoreNumText;
+	delete gameOverText;
+	delete winText;
+	delete retryButton;
 }
 
 bool ModuleSceneGame::Start() {
@@ -44,6 +55,12 @@ bool ModuleSceneGame::Start() {
 	bgTexture = SDL_CreateTextureFromSurface(App->renderer->renderer, s);
 	SDL_SetTextureBlendMode(bgTexture, SDL_BLENDMODE_BLEND);
 	SDL_SetTextureAlphaMod(bgTexture, 200);
+
+	SDL_Rect buttonRect = { 0, 0, 100, 100 };
+	SDL_Surface *buttonS = SDL_CreateRGBSurface(0, 100, 100, 32, 0, 0, 0, 0);
+	SDL_FillRect(buttonS, &buttonRect, SDL_MapRGB(buttonS->format, 255, 165, 0));
+	retryButton = SDL_Button(buttonS, 140, 380, 100, 100);
+	buttonTexture = SDL_CreateTextureFromSurface(App->renderer->renderer, retryButton->internal_surface);
 	return true;
 }
 
@@ -51,6 +68,8 @@ bool ModuleSceneGame::CleanUp() {
 	LOG("Unloading game scene");
 	App->textures->Unload(backgroundTexture);
 	App->textures->Unload(candiesTexture);
+	App->textures->Unload(buttonTexture);
+	App->textures->Unload(bgTexture);
 	return true;
 }
 
@@ -85,7 +104,13 @@ void ModuleSceneGame::OnMouseClick(iPoint mousePos) {
 	const int xEnd = (CANDY_SIZE * COLS) + XOFFSET;
 	const int yEnd = (CANDY_SIZE * ROWS) + YOFFSET;
 
-	if (mousePos.x >= XOFFSET && mousePos.x <= xEnd && mousePos.y >= YOFFSET && mousePos.y <= yEnd && !win && !gameOver) {
+	if (win || gameOver) {
+		if (mouse_on_button(retryButton->location_and_size, mousePos.x, mousePos.y)) {
+			OnRetryClick();
+			LOG("Retried\n");
+		}
+	}
+	else if (mousePos.x >= XOFFSET && mousePos.x <= xEnd && mousePos.y >= YOFFSET && mousePos.y <= yEnd) {
 		selectedPoint = new iPoint(mousePos);
 	}
 }
@@ -202,11 +227,13 @@ update_status ModuleSceneGame::Update() {
 	if (win) {
 		App->renderer->Blit(bgTexture, 0, 0, NULL);
 		App->renderer->Blit(winText->texture, (SCREEN_WIDTH / 2) - (targetText->rect.w / 2) - targetText->rect.w, (SCREEN_HEIGHT / 2) - (targetText->rect.h / 2), &winText->rect);
+		App->renderer->Blit(buttonTexture, 140, 380, nullptr);
 	}
 	// Game over screen
 	else if (gameOver) {
 		App->renderer->Blit(bgTexture, 0, 0, NULL);
 		App->renderer->Blit(gameOverText->texture, (SCREEN_WIDTH / 2) - (targetText->rect.w / 2) - targetText->rect.w, (SCREEN_HEIGHT / 2) - (targetText->rect.h / 2), &gameOverText->rect);
+		App->renderer->Blit(buttonTexture, 140, 380, nullptr);
 	}
 
 	// Change scene

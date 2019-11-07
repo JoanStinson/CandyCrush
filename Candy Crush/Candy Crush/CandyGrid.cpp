@@ -3,6 +3,7 @@
 #include <string>
 #include <fstream>
 #include <sstream>
+#include <algorithm>
 
 CandyGrid::CandyGrid(int rows, int cols) : rows(rows), cols(cols) {
 
@@ -52,9 +53,11 @@ Candy* CandyGrid::Get(iPoint pos) const {
 }
 
 void CandyGrid::Move(iPoint pos, iPoint newPos) {
-	grid[newPos.x][newPos.y] = grid[pos.x][pos.y];
-	grid[newPos.x][newPos.y]->SetPos(newPos);
-	
+	if (pos != newPos) {
+		grid[newPos.x][newPos.y] = grid[pos.x][pos.y];
+		grid[newPos.x][newPos.y]->SetPos(newPos);
+	}
+
 	// Generate new candy
 	CandyType type = CandyType(rand() % CANDY_TYPES);
 	grid[pos.x][pos.y] = new Candy(pos, type);
@@ -168,14 +171,16 @@ void CandyGrid::ClearGrid() {
 		for (int j = 0; j < cols; ++j) {
 			Candy *candy = Get(iPoint(i, j));
 			CandyMatch match = CheckMatch(candy->GetType(), candy->GetPos());
-			ClearFromMatch(candy, match);
+			if (match.GetMatch() != Match::NONE) {
+				ClearFromMatch(candy, match);
+			}
 		}
 	}
 }
 
 void CandyGrid::ClearMatchedCol(int col, int xBegin, int xEnd) {
 	int pos = xEnd;
-	for (int i = xBegin - 1; i >= 0; --i, --pos) 
+	for (int i = std::max(xBegin-1, 0); i >= 0; --i, --pos) 
 		Move(iPoint(i, col), iPoint(pos, col));
 }
 
