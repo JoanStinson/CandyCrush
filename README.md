@@ -38,7 +38,7 @@ Currently in WIP! Available features:
 
 ## Credits
 
-Author: Joan Ginard
+Author: [Joan Ginard Mateo](https://github.com/JoanStinson)
 
 ## License
 
