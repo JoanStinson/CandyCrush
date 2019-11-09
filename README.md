@@ -42,4 +42,4 @@ Author: [Joan Ginard Mateo](https://github.com/JoanStinson)
 
 ## License
 
-MIT LICENSE
+[MIT LICENSE](https://github.com/JoanStinson/Candy_Crush/blob/master/LICENSE)
