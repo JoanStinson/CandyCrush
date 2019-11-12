@@ -2,7 +2,6 @@
 #include "Application.h"
 #include <SDL.h>
 #include <SDL_mixer.h>
-#pragma comment( lib, "SDL2_mixer/lib/x86/SDL2_mixer.lib" )
 
 ModuleAudio::ModuleAudio(bool start_enabled) : Module(start_enabled) {
 }

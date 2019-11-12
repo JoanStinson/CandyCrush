@@ -67,7 +67,6 @@ SDL_Texture* const ModuleTextures::LoadImage(const char* path) {
 
 SDL_Texture* const ModuleTextures::LoadText(const char *text, int size, SDL_Color &textColor, bool bold, const char *fontPath) {
 	SDL_Texture* texture = nullptr;
-	SDL_Surface* surface = nullptr;
 	TTF_Font *font = TTF_OpenFont(fontPath, size);
 
 	if (font == nullptr) {
@@ -75,7 +74,7 @@ SDL_Texture* const ModuleTextures::LoadText(const char *text, int size, SDL_Colo
 	}
 	else {
 		if (bold) TTF_SetFontStyle(font, TTF_STYLE_BOLD);
-		surface = TTF_RenderText_Blended(font, text, textColor);
+		SDL_Surface* surface = TTF_RenderText_Blended(font, text, textColor);
 
 		if (surface == nullptr) {
 			LOG("Unable to render text surface! SDL_ttf Error: %s\n", TTF_GetError());
@@ -92,6 +91,8 @@ SDL_Texture* const ModuleTextures::LoadText(const char *text, int size, SDL_Colo
 
 			SDL_FreeSurface(surface);
 		}
+
+		TTF_CloseFont(font);
 	}
 
 	return texture;

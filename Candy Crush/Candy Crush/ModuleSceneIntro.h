@@ -1,5 +1,5 @@
-#ifndef _MODULESCENEINTRO_H_
-#define _MODULESCENEINTRO_H_
+#ifndef __MODULESCENEINTRO_H__
+#define __MODULESCENEINTRO_H__
 
 #include "Module.h"
 #include "Animation.h"
@@ -22,15 +22,16 @@ public:
 	bool CleanUp() override;
 
 private:
-	unsigned int lastTime = 0;
-	unsigned int currentTime = 0;
 	GIF cinematic;
 	GIF girl;
 	GIF ghost;
-	SDL_Texture *graphics = nullptr;
+	SDL_Texture* graphics = nullptr;
 	SDL_Rect mainMenu;
+
+	unsigned int lastTime = 0;
+	unsigned int currentTime = 0;
 	static bool hasPlayedIntro;
 	static int counter;
 };
 
-#endif 
+#endif // __MODULESCENEINTRO_H__

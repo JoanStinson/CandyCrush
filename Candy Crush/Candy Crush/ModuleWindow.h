@@ -1,5 +1,5 @@
-#ifndef _MODULEWINDOW_H_
-#define _MODULEWINDOW_H_
+#ifndef __MODULEWINDOW_H__
+#define __MODULEWINDOW_H__
 
 #include "Module.h"
 
@@ -19,4 +19,4 @@ public:
 	SDL_Surface* screenSurface = nullptr;
 };
 
-#endif 
+#endif // __MODULEWINDOW_H__

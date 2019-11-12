@@ -1,5 +1,6 @@
-#ifndef _MODULESCENEGAME_H_
-#define _MODULESCENEGAME_H_
+#ifndef __MODULESCENEGAME_H__
+#define __MODULESCENEGAME_H__
+
 #include "Module.h"
 #include "Animation.h"
 #include "CandyGrid.h"
@@ -15,44 +16,17 @@
 struct SDL_Texture;
 struct SDL_Rect;
 struct Text;
-typedef enum class MouseMove;
+typedef enum MouseMove;
 
 class ModuleSceneGame : public Module {
 public:
 	ModuleSceneGame(bool start_enabled = true);
 	~ModuleSceneGame();
 
-
 	bool Start() override;
 	update_status Update() override;
 	update_status LateUpdate() override;
 	bool CleanUp() override;
-
-private:
-	SDL_Texture *candiesTexture = nullptr;
-	SDL_Texture *backgroundTexture = nullptr;
-	SDL_Rect background;
-	CandyGrid *candyGrid = nullptr;
-	iPoint *selectedPoint = nullptr;
-	Text *targetText = nullptr;
-	Text *targetNumText = nullptr;
-	Text *movesText = nullptr;
-	Text *movesNumText = nullptr;
-	Text *scoreText = nullptr;
-	Text *scoreNumText = nullptr;
-	Text *gameOverText = nullptr;
-	Text *winText = nullptr;
-	int moves = MAX_MOVES;
-	int score = 0;
-	bool gameOver = false;
-	bool win = false;
-
-	SDL_Texture *bgTexture = nullptr;
-
-	CandyScore candyScore;
-
-	SDL_Button_t *retryButton = nullptr;
-	SDL_Texture *buttonTexture = nullptr;
 
 private:
 	SDL_Rect GetRectFromCandy(Candy *candy);
@@ -63,6 +37,33 @@ private:
 
 	void Initialize();
 	void OnRetryClick();
+
+private:
+	SDL_Rect background;
+	CandyScore candyScore;
+
+	CandyGrid* candyGrid = nullptr;
+	iPoint* selectedPoint = nullptr;
+	SDL_Button_t* retryButton = nullptr;
+
+	SDL_Texture* buttonTexture = nullptr;
+	SDL_Texture* candiesTexture = nullptr;
+	SDL_Texture* backgroundTexture = nullptr;
+	SDL_Texture* blackTexture = nullptr;
+
+	Text* targetText = nullptr;
+	Text* targetNumText = nullptr;
+	Text* movesText = nullptr;
+	Text* movesNumText = nullptr;
+	Text* scoreText = nullptr;
+	Text* scoreNumText = nullptr;
+	Text* gameOverText = nullptr;
+	Text* winText = nullptr;
+
+	int moves = MAX_MOVES;
+	int score = 0;
+	bool gameOver = false;
+	bool win = false;
 };
 
-#endif 
+#endif // __MODULESCENEGAME_H__

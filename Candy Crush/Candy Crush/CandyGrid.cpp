@@ -15,7 +15,7 @@ CandyGrid::CandyGrid(int rows, int cols) : rows(rows), cols(cols) {
 	file.open(LEVEL_START);
 
 	int i = 0, j;
-	if (file.is_open()) { 
+	if (file.is_open()) {
 
 		while (std::getline(file, line)) {
 			std::vector<Candy*> temp;
@@ -32,7 +32,7 @@ CandyGrid::CandyGrid(int rows, int cols) : rows(rows), cols(cols) {
 
 			grid.push_back(temp);
 			++i;
-			
+
 		}
 		file.close();
 	}
@@ -56,20 +56,19 @@ void CandyGrid::Move(iPoint pos, iPoint newPos) {
 	if (pos != newPos) {
 		grid[newPos.x][newPos.y] = grid[pos.x][pos.y];
 		grid[newPos.x][newPos.y]->SetPos(newPos);
+		grid[pos.x][pos.y] = nullptr;
 	}
-
-	// Generate new candy
-	CandyType type = CandyType(rand() % CANDY_TYPES);
-	grid[pos.x][pos.y] = new Candy(pos, type);
 }
 
 void CandyGrid::Swap(iPoint pos, iPoint newPos) {
-	grid[newPos.x][newPos.y]->SetPos(pos);
-	grid[pos.x][pos.y]->SetPos(newPos);
+	if (pos != newPos) {
+		grid[newPos.x][newPos.y]->SetPos(pos);
+		grid[pos.x][pos.y]->SetPos(newPos);
 
-	Candy *temp = grid[newPos.x][newPos.y];
-	grid[newPos.x][newPos.y] = grid[pos.x][pos.y];
-	grid[pos.x][pos.y] = temp;
+		Candy *temp = grid[newPos.x][newPos.y];
+		grid[newPos.x][newPos.y] = grid[pos.x][pos.y];
+		grid[pos.x][pos.y] = temp;
+	}
 }
 
 CandyMatch CandyGrid::CheckMatch(CandyType type, iPoint pos) {
@@ -179,12 +178,19 @@ void CandyGrid::ClearGrid() {
 }
 
 void CandyGrid::ClearMatchedCol(int col, int xBegin, int xEnd) {
+	// Clear matched candies
 	int pos = xEnd;
-	for (int i = std::max(xBegin-1, 0); i >= 0; --i, --pos) 
+	for (int i = xBegin - 1; i >= 0; --i, --pos)
 		Move(iPoint(i, col), iPoint(pos, col));
+
+	// Generate new candies
+	for (int i = pos; i >= 0; --i) {
+		CandyType type = CandyType(rand() % CANDY_TYPES);
+		grid[i][col] = new Candy(iPoint(i, col), type);
+	}
 }
 
 void CandyGrid::ClearMatchedRow(int row, int yBegin, int yEnd) {
-	for(int pos = yBegin; pos <= yEnd; ++pos)
+	for (int pos = yBegin; pos <= yEnd; ++pos)
 		ClearMatchedCol(pos, row, row);
 }

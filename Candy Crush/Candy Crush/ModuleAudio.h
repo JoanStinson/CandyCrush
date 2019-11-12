@@ -1,5 +1,6 @@
-#ifndef _MODULEAUDIO_H_
-#define _MODULEAUDIO_H_
+#ifndef __MODULEAUDIO_H__
+#define __MODULEAUDIO_H__
+
 #include "Module.h"
 #include <vector>
 
@@ -17,13 +18,14 @@ public:
 	bool Init() override;
 	bool CleanUp() override;
 
-	bool PlayMusic(const char* path, float fade_time = DEFAULT_MUSIC_FADE_TIME);
-	unsigned int LoadFx(const char* path);
+public:
+	bool PlayMusic(const char *path, float fade_time = DEFAULT_MUSIC_FADE_TIME);
+	unsigned int LoadFx(const char *path);
 	bool PlayFx(unsigned int fx, int repeat = 0);
 
 private:
-	Mix_Music *music = nullptr;
+	Mix_Music* music = nullptr;
 	std::vector<Mix_Chunk*>	fx;
 };
 
-#endif 
+#endif // __MODULEAUDIO_H__

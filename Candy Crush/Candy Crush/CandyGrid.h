@@ -1,5 +1,6 @@
-#ifndef _CANDYGRID_H_
-#define _CANDYGRID_H_
+#ifndef __CANDYGRID_H__
+#define __CANDYGRID_H__
+
 #include "Candy.h"
 #include "CandyMatch.h"
 #include <vector>
@@ -20,13 +21,13 @@ public:
 	void ClearGrid();
 
 private:
+	void ClearMatchedCol(int col, int xBegin, int xEnd);
+	void ClearMatchedRow(int row, int yBegin, int yEnd);
+
+private:
 	int rows;
 	int cols;
 	std::vector<std::vector<Candy*>> grid;
-
-private:
-	void ClearMatchedCol(int col, int xBegin, int xEnd);
-	void ClearMatchedRow(int row, int yBegin, int yEnd);
 };
 
-#endif
+#endif // __CANDYGRID_H__

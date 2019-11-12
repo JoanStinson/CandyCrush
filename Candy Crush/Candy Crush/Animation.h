@@ -1,19 +1,11 @@
-#pragma once
-#include <vector>
+#ifndef __ANIMATION_H__
+#define __ANIMATION_H__
 
-using namespace std;
+#include <vector>
 
 class Animation {
 public:
-	float speed;
-	vector<SDL_Rect> frames;
-
-private:
-	float current_frame;
-
-public:
-	Animation() : frames(), speed(1.0f), current_frame(0.0f) {
-	}
+	Animation() : frames(), speed(1.0f), current_frame(0.0f) {}
 
 	SDL_Rect& GetCurrentFrame() {
 		current_frame += speed;
@@ -29,4 +21,13 @@ public:
 	void ResetAnim() {
 		current_frame = 0;
 	}
+
+public:
+	float speed;
+	std::vector<SDL_Rect> frames;
+
+private:
+	float current_frame;
 };
+
+#endif // __ANIMATION_H__

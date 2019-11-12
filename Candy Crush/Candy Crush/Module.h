@@ -1,8 +1,7 @@
-#ifndef _MODULE_H_
-#define _MODULE_H_
-#include "Globals.h"
+#ifndef __MODULE_H__
+#define __MODULE_H__
 
-class Application;
+#include "Globals.h"
 
 class Module {
 public:
@@ -53,4 +52,4 @@ private:
 	bool active = true;
 };
 
-#endif 
+#endif // __MODULE_H__

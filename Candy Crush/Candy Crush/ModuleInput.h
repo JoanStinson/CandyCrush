@@ -1,5 +1,6 @@
-#ifndef _MODULEINPUT_H_
-#define _MODULEINPUT_H_
+#ifndef __MODULEINPUT_H__
+#define __MODULEINPUT_H__
+
 #include "Module.h"
 #include "Point.h"
 #include <SDL_scancode.h>
@@ -20,7 +21,7 @@ typedef enum KeyState {
 	KEY_UP
 };
 
-typedef enum class MouseMove {
+typedef enum MouseMove {
 	RIGHT,
 	LEFT,
 	UP,
@@ -37,25 +38,19 @@ public:
 	update_status PreUpdate() override;
 	bool CleanUp() override;
 
-	KeyState GetKey(int id) const {
-		return keyboard[id];
-	}
-
-	KeyState GetMouseButtonDown(int id) const {
-		return mouse_buttons[id - 1];
-	}
-
+public:
+	KeyState GetKey(int id) const;
+	KeyState GetMouseButtonDown(int id) const; 
 	bool GetWindowEvent(EventWindow code) const;
-
 	const iPoint& GetMouseMotion() const;
 	const iPoint& GetMousePosition() const;
 
 private:
 	bool windowEvents[WE_COUNT];
-	KeyState* keyboard;
-	KeyState mouse_buttons[NUM_MOUSE_BUTTONS];
-	iPoint mouse_motion;
+	KeyState* keyboard = nullptr;
+	KeyState mouseButtons[NUM_MOUSE_BUTTONS];
+	iPoint mouseMotion;
 	iPoint mouse;
 };
 
-#endif 
+#endif // __MODULEINPUT_H__

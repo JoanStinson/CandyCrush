@@ -1,6 +1,8 @@
-#ifndef _CANDYMATCH_H_
-#define _CANDYMATCH_H_
+#ifndef __CANDYMATCH_H__
+#define __CANDYMATCH_H__
+
 #include "Point.h"
+
 enum class Match { NONE, ROW, COL, BOTH };
 
 class CandyMatch {
@@ -14,6 +16,7 @@ public:
 	int GetYBegin() const;
 	int GetYEnd() const;
 	iPoint GetMatches() const;
+
 	void SetMatches(iPoint matches);
 
 private:
@@ -25,4 +28,4 @@ private:
 	iPoint matches;
 };
 
-#endif
+#endif // __CANDYMATCH_H__

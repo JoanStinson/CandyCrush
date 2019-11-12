@@ -25,7 +25,7 @@ bool ModuleWindow::Init() {
 		int height = SCREEN_HEIGHT/*_INTRO*/ * SCREEN_SIZE;
 		Uint32 flags = SDL_WINDOW_SHOWN /*| SDL_WINDOW_BORDERLESS*/;
 
-		if (FULLSCREEN == true) {
+		if (FULLSCREEN) {
 			flags |= SDL_WINDOW_FULLSCREEN;
 		}
 
@@ -39,8 +39,10 @@ bool ModuleWindow::Init() {
 			// Get window surface
 			screenSurface = SDL_GetWindowSurface(window);
 
+			// Set icon
 			SDL_Surface *iconSurface = IMG_Load(ICON);
 			SDL_SetWindowIcon(window, iconSurface);
+			SDL_FreeSurface(iconSurface);
 		}
 	}
 
@@ -53,6 +55,7 @@ bool ModuleWindow::CleanUp() {
 	// Destroy window
 	if (window != nullptr) {
 		SDL_DestroyWindow(window);
+		SDL_FreeSurface(screenSurface);
 	}
 
 	// Quit SDL subsystems

@@ -22,18 +22,18 @@ ModuleSceneGame::ModuleSceneGame(bool start_enabled) : Module(start_enabled) {
 }
 
 ModuleSceneGame::~ModuleSceneGame() {
-
 	delete candyGrid;
 	delete selectedPoint;
+	delete retryButton;
+
 	delete targetText;
 	delete targetNumText;
 	delete movesText;
-	//delete movesNumText;
+	delete movesNumText;
 	delete scoreText;
-	//delete scoreNumText;
+	delete scoreNumText;
 	delete gameOverText;
 	delete winText;
-	delete retryButton;
 }
 
 bool ModuleSceneGame::Start() {
@@ -48,13 +48,15 @@ bool ModuleSceneGame::Start() {
 	scoreText = new Text(App->textures->LoadText("Score: "));
 	gameOverText = new Text(App->textures->LoadText("Game Over", 50, SDL_Color{ 255, 0, 255 }));
 	winText = new Text(App->textures->LoadText("You Win!", 50, SDL_Color{ 255, 255, 0 }));
+	movesNumText = new Text(App->textures->LoadText((std::to_string(0) + std::to_string(moves)).c_str(), 26));
+	scoreNumText = new Text(App->textures->LoadText((std::to_string(0) + std::to_string(0) + std::to_string(0) + std::to_string(0) + std::to_string(score)).c_str(), 30));
 
 	SDL_Rect bg = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
 	SDL_Surface *s = SDL_CreateRGBSurface(0, SCREEN_WIDTH, SCREEN_HEIGHT, 32, 0, 0, 0, 0);
 	SDL_FillRect(s, &bg, SDL_MapRGB(s->format, 0, 0, 0));
-	bgTexture = SDL_CreateTextureFromSurface(App->renderer->renderer, s);
-	SDL_SetTextureBlendMode(bgTexture, SDL_BLENDMODE_BLEND);
-	SDL_SetTextureAlphaMod(bgTexture, 200);
+	blackTexture = SDL_CreateTextureFromSurface(App->renderer->renderer, s);
+	SDL_SetTextureBlendMode(blackTexture, SDL_BLENDMODE_BLEND);
+	SDL_SetTextureAlphaMod(blackTexture, 200);
 
 	SDL_Rect buttonRect = { 0, 0, 100, 100 };
 	SDL_Surface *buttonS = SDL_CreateRGBSurface(0, 100, 100, 32, 0, 0, 0, 0);
@@ -66,10 +68,10 @@ bool ModuleSceneGame::Start() {
 
 bool ModuleSceneGame::CleanUp() {
 	LOG("Unloading game scene");
-	App->textures->Unload(backgroundTexture);
-	App->textures->Unload(candiesTexture);
 	App->textures->Unload(buttonTexture);
-	App->textures->Unload(bgTexture);
+	App->textures->Unload(candiesTexture);
+	App->textures->Unload(backgroundTexture);
+	App->textures->Unload(blackTexture);
 	return true;
 }
 
@@ -189,15 +191,11 @@ void ModuleSceneGame::HandleMatch(Candy *selectedCandy, Candy *nextCandy, CandyM
 			win = true;
 
 		// Clear grid
-		//bool matched = true;
-		//while (matched) {
 		candyGrid->ClearGrid();
-		//}
 	}
 }
 
 update_status ModuleSceneGame::Update() {
-
 	// Draw background
 	App->renderer->Blit(backgroundTexture, 0, 0, &background);
 
@@ -206,18 +204,23 @@ update_status ModuleSceneGame::Update() {
 		for (int j = 0; j < COLS; ++j)
 			App->renderer->Blit(candiesTexture, (CANDY_SIZE * j) + XOFFSET, (CANDY_SIZE * i) + YOFFSET, &GetRectFromCandy(candyGrid->Get(iPoint(i, j))));
 
-	// Draw text
+	// Draw static text
 	App->renderer->Blit(targetText->texture, (SCREEN_WIDTH / 2) - (targetText->rect.w / 2) + 60, 13, &targetText->rect);
 	App->renderer->Blit(targetNumText->texture, (SCREEN_WIDTH / 2) - (targetNumText->rect.w / 2) + 130, 13, &targetNumText->rect);
 	App->renderer->Blit(movesText->texture, (SCREEN_WIDTH / 2) - 42, SCREEN_HEIGHT - 97, &movesText->rect);
-	moves < 10 ? movesNumText = new Text(App->textures->LoadText((std::to_string(0) + std::to_string(moves)).c_str(), 26)) : movesNumText = new Text(App->textures->LoadText(std::to_string(moves).c_str(), 26));
-	App->renderer->Blit(movesNumText->texture, (SCREEN_WIDTH / 2) - 25, SCREEN_HEIGHT - 80, &movesNumText->rect);
 	App->renderer->Blit(scoreText->texture, (SCREEN_WIDTH / 2) + 87, SCREEN_HEIGHT - 100, &scoreText->rect);
-	score < 10 ? scoreNumText = new Text(App->textures->LoadText((std::to_string(0) + std::to_string(0) + std::to_string(0) + std::to_string(0) + std::to_string(score)).c_str(), 30)) :
-		score < 100 ? scoreNumText = new Text(App->textures->LoadText((std::to_string(0) + std::to_string(0) + std::to_string(0) + std::to_string(score)).c_str(), 30)) :
-		score < 1000 ? scoreNumText = new Text(App->textures->LoadText((std::to_string(0) + std::to_string(0) + std::to_string(score)).c_str(), 30)) :
-		score < 10000 ? scoreNumText = new Text(App->textures->LoadText((std::to_string(0) + std::to_string(score)).c_str(), 30)) : scoreNumText = new Text(App->textures->LoadText((std::to_string(score)).c_str(), 30));
+
+	// Draw dynamic text
+	moves < 10 ? movesNumText->Update(App->textures->LoadText((std::to_string(0) + std::to_string(moves)).c_str(), 26)) : movesNumText->Update(App->textures->LoadText(std::to_string(moves).c_str(), 26));
+	App->renderer->Blit(movesNumText->texture, (SCREEN_WIDTH / 2) - 25, SCREEN_HEIGHT - 80, &movesNumText->rect);
+	App->textures->Unload(movesNumText->texture);
+
+	score < 10 ? scoreNumText->Update(App->textures->LoadText((std::to_string(0) + std::to_string(0) + std::to_string(0) + std::to_string(0) + std::to_string(score)).c_str(), 30)) :
+		score < 100 ? scoreNumText->Update(App->textures->LoadText((std::to_string(0) + std::to_string(0) + std::to_string(0) + std::to_string(score)).c_str(), 30)) :
+		score < 1000 ? scoreNumText->Update(App->textures->LoadText((std::to_string(0) + std::to_string(0) + std::to_string(score)).c_str(), 30)) :
+		score < 10000 ? scoreNumText->Update(App->textures->LoadText((std::to_string(0) + std::to_string(score)).c_str(), 30)) : scoreNumText->Update(App->textures->LoadText((std::to_string(score)).c_str(), 30));
 	App->renderer->Blit(scoreNumText->texture, (SCREEN_WIDTH / 2) + 80, SCREEN_HEIGHT - 80, &scoreNumText->rect);
+	App->textures->Unload(scoreNumText->texture);
 
 	// Mouse events
 	App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN ? OnMouseClick(App->input->GetMousePosition()) :
@@ -225,13 +228,13 @@ update_status ModuleSceneGame::Update() {
 
 	// Win screen
 	if (win) {
-		App->renderer->Blit(bgTexture, 0, 0, NULL);
+		App->renderer->Blit(blackTexture, 0, 0, NULL);
 		App->renderer->Blit(winText->texture, (SCREEN_WIDTH / 2) - (targetText->rect.w / 2) - targetText->rect.w, (SCREEN_HEIGHT / 2) - (targetText->rect.h / 2), &winText->rect);
 		App->renderer->Blit(buttonTexture, 140, 380, nullptr);
 	}
 	// Game over screen
 	else if (gameOver) {
-		App->renderer->Blit(bgTexture, 0, 0, NULL);
+		App->renderer->Blit(blackTexture, 0, 0, NULL);
 		App->renderer->Blit(gameOverText->texture, (SCREEN_WIDTH / 2) - (targetText->rect.w / 2) - targetText->rect.w, (SCREEN_HEIGHT / 2) - (targetText->rect.h / 2), &gameOverText->rect);
 		App->renderer->Blit(buttonTexture, 140, 380, nullptr);
 	}
@@ -244,8 +247,6 @@ update_status ModuleSceneGame::Update() {
 }
 
 update_status ModuleSceneGame::LateUpdate() {
-	delete movesNumText;
-	delete scoreNumText;
 	return UPDATE_CONTINUE;
 }
 

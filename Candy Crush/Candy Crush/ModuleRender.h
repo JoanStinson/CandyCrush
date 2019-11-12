@@ -1,5 +1,5 @@
-#ifndef _MODULERENDER_H_
-#define _MODULERENDER_H_
+#ifndef __MODULERENDER_H__
+#define __MODULERENDER_H__
 
 #include "Module.h"
 
@@ -23,6 +23,7 @@ public:
 	update_status PostUpdate() override;
 	bool CleanUp() override;
 
+public:
 	bool Blit(SDL_Texture* texture, int x, int y, SDL_Rect* section, float speed = 1.0f);
 	void ResetCamera();
 
@@ -31,4 +32,4 @@ public:
 	SDL_Rect camera;
 };
 
-#endif 
+#endif // __MODULERENDER_H__

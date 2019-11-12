@@ -28,8 +28,6 @@ bool ModuleRender::Init() {
 		ret = false;
 	}
 
-	//SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-
 	return ret;
 }
 
@@ -51,7 +49,7 @@ update_status ModuleRender::PostUpdate() {
 bool ModuleRender::CleanUp() {
 	LOG("Destroying renderer");
 
-	//Destroy window
+	// Destroy window
 	if (renderer != nullptr) {
 		SDL_DestroyRenderer(renderer);
 	}

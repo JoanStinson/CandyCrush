@@ -1,5 +1,6 @@
-#ifndef _MODULEFADETOBLACK_H_
-#define _MODULEFADETOBLACK_H_
+#ifndef __MODULEFADETOBLACK_H__
+#define __MODULEFADETOBLACK_H__
+
 #include "Module.h"
 
 class ModuleFadeToBlack : public Module {
@@ -9,7 +10,9 @@ public:
 
 	bool Start() override;
 	update_status LateUpdate() override;
-	void FadeToBlack(Module* module_on, Module* module_off = nullptr, float time = 1.0f);
+
+public:
+	void FadeToBlack(Module *module_on, Module *module_off = nullptr, float time = 1.0f);
 	bool isFading() const;
 
 private:
@@ -20,4 +23,4 @@ private:
 	Module* moduleOff = nullptr;
 };
 
-#endif 
+#endif // __MODULEFADETOBLACK_H__
