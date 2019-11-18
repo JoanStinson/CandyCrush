@@ -5,7 +5,9 @@
 
 #define CANDY_TYPES 6
 
-enum class CandyType { RED, ORANGE, YELLOW, GREEN, BLUE, PURPLE };
+enum class CandyType { 
+	RED, ORANGE, YELLOW, GREEN, BLUE, PURPLE 
+};
 
 class Candy {
 public:

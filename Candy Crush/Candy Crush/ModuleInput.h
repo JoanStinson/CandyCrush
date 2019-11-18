@@ -8,24 +8,15 @@
 #define NUM_MOUSE_BUTTONS 5
 
 typedef enum EventWindow {
-	WE_QUIT = 0,
-	WE_HIDE = 1,
-	WE_SHOW = 2,
-	WE_COUNT
+	WE_QUIT, WE_HIDE, WE_SHOW, WE_COUNT
 };
 
 typedef enum KeyState {
-	KEY_IDLE = 0,
-	KEY_DOWN,
-	KEY_REPEAT,
-	KEY_UP
+	KEY_IDLE, KEY_DOWN, KEY_REPEAT, KEY_UP
 };
 
 typedef enum MouseMove {
-	RIGHT,
-	LEFT,
-	UP,
-	DOWN
+	RIGHT, LEFT, UP, DOWN
 };
 
 class ModuleInput : public Module {

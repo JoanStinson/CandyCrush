@@ -36,10 +36,6 @@ public:
 		return UPDATE_CONTINUE;
 	}
 
-	virtual update_status LateUpdate() {
-		return UPDATE_CONTINUE;
-	}
-
 	virtual update_status PostUpdate() {
 		return UPDATE_CONTINUE;
 	}

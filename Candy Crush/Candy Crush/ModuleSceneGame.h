@@ -25,7 +25,6 @@ public:
 
 	bool Start() override;
 	update_status Update() override;
-	update_status LateUpdate() override;
 	bool CleanUp() override;
 
 private:
@@ -59,11 +58,17 @@ private:
 	Text* scoreNumText = nullptr;
 	Text* gameOverText = nullptr;
 	Text* winText = nullptr;
+	Text* playAgainText = nullptr;
 
 	int moves = MAX_MOVES;
 	int score = 0;
 	bool gameOver = false;
 	bool win = false;
+
+	unsigned int matchSFX;
+	unsigned int incorrectSFX;
+	unsigned int winSFX;
+	unsigned int loseSFX;
 };
 
 #endif // __MODULESCENEGAME_H__

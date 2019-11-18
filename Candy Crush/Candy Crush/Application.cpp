@@ -57,10 +57,6 @@ update_status Application::Update() {
 
 	for (std::list<Module*>::iterator it = modules.begin(); it != modules.end() && ret == UPDATE_CONTINUE; ++it)
 		if ((*it)->IsEnabled() == true)
-			ret = (*it)->LateUpdate();
-
-	for (std::list<Module*>::iterator it = modules.begin(); it != modules.end() && ret == UPDATE_CONTINUE; ++it)
-		if ((*it)->IsEnabled() == true)
 			ret = (*it)->PostUpdate();
 
 	return ret;

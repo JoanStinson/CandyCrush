@@ -36,8 +36,8 @@ bool ModuleSceneIntro::Start() {
 		CEV_gifLoopMode(cinematic.anim, GIF_ONCE_FOR);
 	}
 	else {
-		SDL_SetWindowSize(App->window->window, SCREEN_WIDTH, SCREEN_HEIGHT);
-		SDL_SetWindowPosition(App->window->window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
+		SDL_SetWindowSize(&App->window->GetWindow(), SCREEN_WIDTH, SCREEN_HEIGHT);
+		SDL_SetWindowPosition(&App->window->GetWindow(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
 		girl.anim = CEV_gifAnimLoad(GIF_GIRL, App->renderer->renderer);
 		girl.texture = CEV_gifTexture(girl.anim);
 		CEV_gifLoopMode(girl.anim, GIF_REPEAT_FOR);
@@ -69,7 +69,7 @@ update_status ModuleSceneIntro::Update() {
 	if (!hasPlayedIntro) {
 		if (counter >= cinematicTime) {
 			hasPlayedIntro = true;
-			SDL_SetWindowSize(App->window->window, SCREEN_WIDTH, SCREEN_HEIGHT);
+			SDL_SetWindowSize(&App->window->GetWindow(), SCREEN_WIDTH, SCREEN_HEIGHT);
 			App->fade->FadeToBlack(App->sceneIntro, App->sceneIntro, 3.0F);
 			return UPDATE_CONTINUE;
 		}
@@ -87,7 +87,7 @@ update_status ModuleSceneIntro::Update() {
 
 	if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN || App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) {
 		App->fade->FadeToBlack(App->sceneGame, App->sceneIntro, 3.0F);
-		SDL_SetWindowSize(App->window->window, SCREEN_WIDTH, SCREEN_HEIGHT);
+		SDL_SetWindowSize(&App->window->GetWindow(), SCREEN_WIDTH, SCREEN_HEIGHT);
 	}
 
 	return UPDATE_CONTINUE;

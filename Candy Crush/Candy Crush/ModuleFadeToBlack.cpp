@@ -16,7 +16,7 @@ bool ModuleFadeToBlack::Start() {
 	return true;
 }
 
-update_status ModuleFadeToBlack::LateUpdate() {
+update_status ModuleFadeToBlack::PostUpdate() {
 	if (startTime > 0) {
 		Uint32 now = SDL_GetTicks() - startTime;
 		float normalized = (float)now / (float)totalTime;

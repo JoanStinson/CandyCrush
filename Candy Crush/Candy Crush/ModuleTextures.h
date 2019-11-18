@@ -34,6 +34,7 @@ public:
 	bool Init() override;
 	bool CleanUp() override;
 
+public:
 	SDL_Texture* const LoadImage(const char *path);
 	SDL_Texture* const LoadText(const char *text, int size = DEFAULT_TEXT_SIZE, SDL_Color &textColor = DEFAULT_COLOR, bool bold = false, const char *fontPath = FONT_PATH);
 	void Unload(SDL_Texture* texture);

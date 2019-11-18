@@ -5,17 +5,14 @@
 #include <time.h>
 
 enum main_states {
-	MAIN_CREATION,
-	MAIN_START,
-	MAIN_UPDATE,
-	MAIN_FINISH,
-	MAIN_EXIT
+	MAIN_CREATION, MAIN_START, MAIN_UPDATE, MAIN_FINISH, MAIN_EXIT
 };
 
 Application* App = nullptr;
 
 int main(int argc, char ** argv) {
-	srand(4);
+	srand(static_cast<unsigned>(time(NULL)));
+
 	int main_return = EXIT_FAILURE;
 	main_states state = MAIN_CREATION;
 
@@ -29,7 +26,6 @@ int main(int argc, char ** argv) {
 			break;
 
 		case MAIN_START:
-
 			LOG("Application Init --------------");
 			if (App->Init() == false) {
 				LOG("Application Init exits with error -----");
@@ -42,8 +38,7 @@ int main(int argc, char ** argv) {
 
 			break;
 
-		case MAIN_UPDATE:
-		{
+		case MAIN_UPDATE: {
 			int update_return = App->Update();
 
 			if (update_return == UPDATE_ERROR) {
@@ -57,7 +52,6 @@ int main(int argc, char ** argv) {
 		break;
 
 		case MAIN_FINISH:
-
 			LOG("Application CleanUp --------------");
 			if (App->CleanUp() == false) {
 				LOG("Application CleanUp exits with error -----");
@@ -66,9 +60,7 @@ int main(int argc, char ** argv) {
 				main_return = EXIT_SUCCESS;
 
 			state = MAIN_EXIT;
-
 			break;
-
 		}
 	}
 

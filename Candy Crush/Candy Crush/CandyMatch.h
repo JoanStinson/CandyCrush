@@ -3,7 +3,9 @@
 
 #include "Point.h"
 
-enum class Match { NONE, ROW, COL, BOTH };
+enum class Match { 
+	NONE, ROW, COL, BOTH 
+};
 
 class CandyMatch {
 public:

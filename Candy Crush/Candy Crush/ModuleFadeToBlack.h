@@ -9,7 +9,7 @@ public:
 	~ModuleFadeToBlack();
 
 	bool Start() override;
-	update_status LateUpdate() override;
+	update_status PostUpdate() override;
 
 public:
 	void FadeToBlack(Module *module_on, Module *module_off = nullptr, float time = 1.0f);

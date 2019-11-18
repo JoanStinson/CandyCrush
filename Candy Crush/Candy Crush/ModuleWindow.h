@@ -15,6 +15,9 @@ public:
 	bool CleanUp() override;
 
 public:
+	SDL_Window& GetWindow() const;
+
+private:
 	SDL_Window* window = nullptr;
 	SDL_Surface* screenSurface = nullptr;
 };

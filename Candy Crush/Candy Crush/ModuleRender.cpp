@@ -21,7 +21,7 @@ bool ModuleRender::Init() {
 		flags |= SDL_RENDERER_PRESENTVSYNC;
 	}
 
-	renderer = SDL_CreateRenderer(App->window->window, -1, flags);
+	renderer = SDL_CreateRenderer(&App->window->GetWindow(), -1, flags);
 
 	if (renderer == nullptr) {
 		LOG("Renderer could not be created! SDL_Error: %s\n", SDL_GetError());

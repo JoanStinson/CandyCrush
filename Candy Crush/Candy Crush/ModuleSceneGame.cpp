@@ -13,6 +13,10 @@
 #define SPRITE_LEVEL "Game/level.jpg"
 #define SPRITE_CANDIES "Game/candy spritesheet.png"
 #define MUSIC_LEVEL "Game/level.ogg"
+#define SFX_MATCH "Game/match.wav"
+#define SFX_INCORRECT "Game/incorrect.wav"
+#define SFX_WIN "Game/you win.wav"
+#define SFX_LOSE "Game/game over.wav"
 #define CANDY_SIZE 62
 #define XOFFSET 30
 #define YOFFSET 120
@@ -34,6 +38,7 @@ ModuleSceneGame::~ModuleSceneGame() {
 	delete scoreNumText;
 	delete gameOverText;
 	delete winText;
+	delete playAgainText;
 }
 
 bool ModuleSceneGame::Start() {
@@ -46,10 +51,11 @@ bool ModuleSceneGame::Start() {
 	targetNumText = new Text(App->textures->LoadText(std::to_string(TARGET).c_str()));
 	movesText = new Text(App->textures->LoadText("Moves: ", 20));
 	scoreText = new Text(App->textures->LoadText("Score: "));
-	gameOverText = new Text(App->textures->LoadText("Game Over", 50, SDL_Color{ 255, 0, 255 }));
-	winText = new Text(App->textures->LoadText("You Win!", 50, SDL_Color{ 255, 255, 0 }));
+	gameOverText = new Text(App->textures->LoadText("Game Over", 50, SDL_Color{ 255, 0, 0 }));
+	winText = new Text(App->textures->LoadText("You Win!", 50, SDL_Color{ 0, 255, 0 }));
 	movesNumText = new Text(App->textures->LoadText((std::to_string(0) + std::to_string(moves)).c_str(), 26));
 	scoreNumText = new Text(App->textures->LoadText((std::to_string(0) + std::to_string(0) + std::to_string(0) + std::to_string(0) + std::to_string(score)).c_str(), 30));
+	playAgainText = new Text(App->textures->LoadText("Play Again"));
 
 	SDL_Rect bg = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
 	SDL_Surface *s = SDL_CreateRGBSurface(0, SCREEN_WIDTH, SCREEN_HEIGHT, 32, 0, 0, 0, 0);
@@ -58,11 +64,16 @@ bool ModuleSceneGame::Start() {
 	SDL_SetTextureBlendMode(blackTexture, SDL_BLENDMODE_BLEND);
 	SDL_SetTextureAlphaMod(blackTexture, 200);
 
-	SDL_Rect buttonRect = { 0, 0, 100, 100 };
-	SDL_Surface *buttonS = SDL_CreateRGBSurface(0, 100, 100, 32, 0, 0, 0, 0);
-	SDL_FillRect(buttonS, &buttonRect, SDL_MapRGB(buttonS->format, 255, 165, 0));
-	retryButton = SDL_Button(buttonS, 140, 380, 100, 100);
+	SDL_Rect buttonRect = { 0, 0, 140, 36 };
+	SDL_Surface *buttonS = SDL_CreateRGBSurface(0, buttonRect.w, buttonRect.h, 32, 0, 0, 0, 0);
+	SDL_FillRect(buttonS, &buttonRect, SDL_MapRGB(buttonS->format, 255, 237, 0));
+	retryButton = SDL_Button(buttonS, 120, 394, buttonRect.w, buttonRect.h);
 	buttonTexture = SDL_CreateTextureFromSurface(App->renderer->renderer, retryButton->internal_surface);
+
+	matchSFX = App->audio->LoadFx(SFX_MATCH);
+	incorrectSFX = App->audio->LoadFx(SFX_INCORRECT);
+	winSFX = App->audio->LoadFx(SFX_WIN);
+	loseSFX = App->audio->LoadFx(SFX_LOSE);
 	return true;
 }
 
@@ -140,10 +151,11 @@ void ModuleSceneGame::OnMouseUnClick(iPoint mousePos) {
 
 		if (moves == 0) {
 			gameOver = true;
+			App->audio->PlayFx(loseSFX);
 		}
 
 		selectedPoint = nullptr;
-	}
+	}	
 }
 
 Candy* ModuleSceneGame::GetNextCandy(Candy *selectedCandy, MouseMove move) {
@@ -187,12 +199,17 @@ void ModuleSceneGame::HandleMatch(Candy *selectedCandy, Candy *nextCandy, CandyM
 		// Update score
 		score += candyScore.GetScore(match.GetMatches().x);
 		score += candyScore.GetScore(match.GetMatches().y);
-		if (score >= TARGET)
+		if (score >= TARGET) {
 			win = true;
+			App->audio->PlayFx(winSFX);
+		}
 
 		// Clear grid
 		candyGrid->ClearGrid();
+
+		App->audio->PlayFx(matchSFX);
 	}
+	else App->audio->PlayFx(incorrectSFX);
 }
 
 update_status ModuleSceneGame::Update() {
@@ -229,24 +246,22 @@ update_status ModuleSceneGame::Update() {
 	// Win screen
 	if (win) {
 		App->renderer->Blit(blackTexture, 0, 0, NULL);
-		App->renderer->Blit(winText->texture, (SCREEN_WIDTH / 2) - (targetText->rect.w / 2) - targetText->rect.w, (SCREEN_HEIGHT / 2) - (targetText->rect.h / 2), &winText->rect);
-		App->renderer->Blit(buttonTexture, 140, 380, nullptr);
+		App->renderer->Blit(winText->texture, (SCREEN_WIDTH / 2) - (targetText->rect.w / 2) - targetText->rect.w + 18, (SCREEN_HEIGHT / 2) - (targetText->rect.h / 2), &winText->rect);
+		App->renderer->Blit(buttonTexture, 120, 394, nullptr);
+		App->renderer->Blit(playAgainText->texture, (SCREEN_WIDTH / 2) - (playAgainText->rect.w / 2) + 2, (SCREEN_HEIGHT / 2) - (playAgainText->rect.h / 2) + 80, &playAgainText->rect);
 	}
 	// Game over screen
 	else if (gameOver) {
 		App->renderer->Blit(blackTexture, 0, 0, NULL);
-		App->renderer->Blit(gameOverText->texture, (SCREEN_WIDTH / 2) - (targetText->rect.w / 2) - targetText->rect.w, (SCREEN_HEIGHT / 2) - (targetText->rect.h / 2), &gameOverText->rect);
-		App->renderer->Blit(buttonTexture, 140, 380, nullptr);
+		App->renderer->Blit(gameOverText->texture, (SCREEN_WIDTH / 2) - (targetText->rect.w / 2) - targetText->rect.w - 8, (SCREEN_HEIGHT / 2) - (targetText->rect.h / 2), &gameOverText->rect);
+		App->renderer->Blit(buttonTexture, 120, 394, nullptr);
+		App->renderer->Blit(playAgainText->texture, (SCREEN_WIDTH / 2) - (playAgainText->rect.w / 2) + 2, (SCREEN_HEIGHT / 2) - (playAgainText->rect.h / 2) + 80, &playAgainText->rect);
 	}
 
 	// Change scene
 	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
 		App->fade->FadeToBlack(App->sceneIntro, App->sceneGame, 3.0F);
 
-	return UPDATE_CONTINUE;
-}
-
-update_status ModuleSceneGame::LateUpdate() {
 	return UPDATE_CONTINUE;
 }
 
