@@ -3,7 +3,7 @@
 A simple Candy Crush implementation using a 2D game engine architecture with C++ and SDL (MVC pattern).
 
 <p align="center">
-  <img width="369" height="660" src="https://github.com/JoanStinson/CandyCrush/blob/master/preview.gif">
+  <img width="369" height="660" src="https://github.com/JoanStinson/CandyCrush/blob/master/candy preview.gif">
  </p>
 
 ## Installation
