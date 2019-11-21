@@ -94,6 +94,18 @@ bool ModuleAudio::PlayMusic(const char* path, float fade_time) {
 	return ret;
 }
 
+void ModuleAudio::PauseMusic() {
+	Mix_PauseMusic();
+}
+
+void ModuleAudio::ResumeMusic() {
+	Mix_ResumeMusic();
+}
+
+void ModuleAudio::StopMusic() {
+	Mix_HaltMusic();
+}
+
 unsigned int ModuleAudio::LoadFx(const char* path) {
 	unsigned int ret = 0;
 	Mix_Chunk* chunk = Mix_LoadWAV(path);

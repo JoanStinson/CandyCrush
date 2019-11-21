@@ -4,7 +4,7 @@
 #include "Module.h"
 #include <vector>
 
-#define DEFAULT_MUSIC_FADE_TIME 2.0f
+#define DEFAULT_MUSIC_FADE_TIME 2.0F
 
 struct _Mix_Music;
 struct Mix_Chunk;
@@ -20,6 +20,9 @@ public:
 
 public:
 	bool PlayMusic(const char *path, float fade_time = DEFAULT_MUSIC_FADE_TIME);
+	void PauseMusic();
+	void ResumeMusic();
+	void StopMusic();
 	unsigned int LoadFx(const char *path);
 	bool PlayFx(unsigned int fx, int repeat = 0);
 

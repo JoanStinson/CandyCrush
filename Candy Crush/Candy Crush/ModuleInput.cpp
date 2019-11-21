@@ -4,7 +4,7 @@
 
 #define MAX_KEYS 300
 
-ModuleInput::ModuleInput() : Module(), mouse({ 0, 0 }), mouseMotion({ 0,0 }) {
+ModuleInput::ModuleInput() : Module(), mouseMotion({ 0,0 }), mouse({ 0, 0 }) {
 	keyboard = new KeyState[MAX_KEYS];
 	memset(keyboard, KEY_IDLE, sizeof(KeyState) * MAX_KEYS);
 	memset(mouseButtons, KEY_IDLE, sizeof(KeyState) * NUM_MOUSE_BUTTONS);

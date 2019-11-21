@@ -25,6 +25,7 @@ public:
 
 	bool Start() override;
 	update_status Update() override;
+	update_status PostUpdate() override;
 	bool CleanUp() override;
 
 private:
@@ -64,11 +65,14 @@ private:
 	int score = 0;
 	bool gameOver = false;
 	bool win = false;
+	bool isHovering = false;
 
 	unsigned int matchSFX;
 	unsigned int incorrectSFX;
 	unsigned int winSFX;
 	unsigned int loseSFX;
+	unsigned int hoverButtonSFX;
+	unsigned int clickButtonSFX;
 };
 
 #endif // __MODULESCENEGAME_H__

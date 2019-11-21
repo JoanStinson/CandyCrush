@@ -32,6 +32,7 @@ private:
 	unsigned int currentTime = 0;
 	static bool hasPlayedIntro;
 	static int counter;
+	unsigned int clickButtonSFX;
 };
 
 #endif // __MODULESCENEINTRO_H__

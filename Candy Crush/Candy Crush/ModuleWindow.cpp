@@ -21,9 +21,9 @@ bool ModuleWindow::Init() {
 	}
 	else {
 		// Create window
-		int width = SCREEN_WIDTH/*_INTRO*/ * SCREEN_SIZE;
-		int height = SCREEN_HEIGHT/*_INTRO*/ * SCREEN_SIZE;
-		Uint32 flags = SDL_WINDOW_SHOWN | SDL_WINDOW_ALLOW_HIGHDPI/*| SDL_WINDOW_BORDERLESS*/;
+		int width = SCREEN_WIDTH_INTRO * SCREEN_SIZE;
+		int height = SCREEN_HEIGHT_INTRO * SCREEN_SIZE;
+		Uint32 flags = SDL_WINDOW_SHOWN | SDL_WINDOW_ALLOW_HIGHDPI;
 
 		if (FULLSCREEN) {
 			flags |= SDL_WINDOW_FULLSCREEN;

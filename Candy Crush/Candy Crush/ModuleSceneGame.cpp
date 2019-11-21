@@ -17,6 +17,8 @@
 #define SFX_INCORRECT "Game/incorrect.wav"
 #define SFX_WIN "Game/you win.wav"
 #define SFX_LOSE "Game/game over.wav"
+#define SFX_HOVER_BUTTON "Game/hover button.wav"
+#define SFX_CLICK_BUTTON "Game/click button.wav"
 #define CANDY_SIZE 62
 #define XOFFSET 30
 #define YOFFSET 120
@@ -46,7 +48,7 @@ bool ModuleSceneGame::Start() {
 	candyGrid = new CandyGrid(ROWS, COLS);
 	backgroundTexture = App->textures->LoadImage(SPRITE_LEVEL);
 	candiesTexture = App->textures->LoadImage(SPRITE_CANDIES);
-	App->audio->PlayMusic(MUSIC_LEVEL);
+
 	targetText = new Text(App->textures->LoadText("Target: "));
 	targetNumText = new Text(App->textures->LoadText(std::to_string(TARGET).c_str()));
 	movesText = new Text(App->textures->LoadText("Moves: ", 20));
@@ -70,10 +72,13 @@ bool ModuleSceneGame::Start() {
 	retryButton = SDL_Button(buttonS, 120, 394, buttonRect.w, buttonRect.h);
 	buttonTexture = SDL_CreateTextureFromSurface(App->renderer->renderer, retryButton->internal_surface);
 
+	App->audio->PlayMusic(MUSIC_LEVEL);
 	matchSFX = App->audio->LoadFx(SFX_MATCH);
 	incorrectSFX = App->audio->LoadFx(SFX_INCORRECT);
 	winSFX = App->audio->LoadFx(SFX_WIN);
 	loseSFX = App->audio->LoadFx(SFX_LOSE);
+	hoverButtonSFX = App->audio->LoadFx(SFX_HOVER_BUTTON);
+	clickButtonSFX = App->audio->LoadFx(SFX_CLICK_BUTTON);
 	return true;
 }
 
@@ -119,8 +124,9 @@ void ModuleSceneGame::OnMouseClick(iPoint mousePos) {
 
 	if (win || gameOver) {
 		if (mouse_on_button(retryButton->location_and_size, mousePos.x, mousePos.y)) {
+			App->audio->PlayFx(clickButtonSFX);
 			OnRetryClick();
-			LOG("Retried\n");
+			App->audio->PlayMusic(MUSIC_LEVEL);
 		}
 	}
 	else if (mousePos.x >= XOFFSET && mousePos.x <= xEnd && mousePos.y >= YOFFSET && mousePos.y <= yEnd) {
@@ -151,11 +157,12 @@ void ModuleSceneGame::OnMouseUnClick(iPoint mousePos) {
 
 		if (moves == 0) {
 			gameOver = true;
+			App->audio->StopMusic();
 			App->audio->PlayFx(loseSFX);
 		}
 
 		selectedPoint = nullptr;
-	}	
+	}
 }
 
 Candy* ModuleSceneGame::GetNextCandy(Candy *selectedCandy, MouseMove move) {
@@ -201,6 +208,7 @@ void ModuleSceneGame::HandleMatch(Candy *selectedCandy, Candy *nextCandy, CandyM
 		score += candyScore.GetScore(match.GetMatches().y);
 		if (score >= TARGET) {
 			win = true;
+			App->audio->StopMusic();
 			App->audio->PlayFx(winSFX);
 		}
 
@@ -230,18 +238,22 @@ update_status ModuleSceneGame::Update() {
 	// Draw dynamic text
 	moves < 10 ? movesNumText->Update(App->textures->LoadText((std::to_string(0) + std::to_string(moves)).c_str(), 26)) : movesNumText->Update(App->textures->LoadText(std::to_string(moves).c_str(), 26));
 	App->renderer->Blit(movesNumText->texture, (SCREEN_WIDTH / 2) - 25, SCREEN_HEIGHT - 80, &movesNumText->rect);
-	App->textures->Unload(movesNumText->texture);
-
 	score < 10 ? scoreNumText->Update(App->textures->LoadText((std::to_string(0) + std::to_string(0) + std::to_string(0) + std::to_string(0) + std::to_string(score)).c_str(), 30)) :
 		score < 100 ? scoreNumText->Update(App->textures->LoadText((std::to_string(0) + std::to_string(0) + std::to_string(0) + std::to_string(score)).c_str(), 30)) :
 		score < 1000 ? scoreNumText->Update(App->textures->LoadText((std::to_string(0) + std::to_string(0) + std::to_string(score)).c_str(), 30)) :
 		score < 10000 ? scoreNumText->Update(App->textures->LoadText((std::to_string(0) + std::to_string(score)).c_str(), 30)) : scoreNumText->Update(App->textures->LoadText((std::to_string(score)).c_str(), 30));
 	App->renderer->Blit(scoreNumText->texture, (SCREEN_WIDTH / 2) + 80, SCREEN_HEIGHT - 80, &scoreNumText->rect);
-	App->textures->Unload(scoreNumText->texture);
 
 	// Mouse events
-	App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN ? OnMouseClick(App->input->GetMousePosition()) :
-		App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_UP ? OnMouseUnClick(App->input->GetMousePosition()) : NULL;
+	App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN ? OnMouseClick(App->input->GetMousePosition()) : App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_UP ? OnMouseUnClick(App->input->GetMousePosition()) : NULL;
+	if (win || gameOver) {
+		if (mouse_on_button(retryButton->location_and_size, App->input->GetMousePosition().x, App->input->GetMousePosition().y) && !isHovering) {
+			App->audio->PlayFx(hoverButtonSFX);
+			isHovering = true;
+		}
+		else if (!mouse_on_button(retryButton->location_and_size, App->input->GetMousePosition().x, App->input->GetMousePosition().y) && isHovering) 
+			isHovering = false;
+	}
 
 	// Win screen
 	if (win) {
@@ -262,6 +274,12 @@ update_status ModuleSceneGame::Update() {
 	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
 		App->fade->FadeToBlack(App->sceneIntro, App->sceneGame, 3.0F);
 
+	return UPDATE_CONTINUE;
+}
+
+update_status ModuleSceneGame::PostUpdate() {
+	App->textures->Unload(movesNumText->texture);
+	App->textures->Unload(scoreNumText->texture);
 	return UPDATE_CONTINUE;
 }
 

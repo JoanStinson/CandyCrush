@@ -16,6 +16,7 @@
 #define GIF_GIRL "Game/girl.gif"
 #define SPRITE_MAIN_MENU "Game/main menu.jpg"
 #define MUSIC_MAIN_MENU "Game/main menu.ogg"
+#define SFX_CLICK_BUTTON "Game/click button.wav"
 
 bool ModuleSceneIntro::hasPlayedIntro = false;
 int ModuleSceneIntro::counter = 0;
@@ -44,6 +45,7 @@ bool ModuleSceneIntro::Start() {
 
 		graphics = App->textures->LoadImage(SPRITE_MAIN_MENU);
 		App->audio->PlayMusic(MUSIC_MAIN_MENU);
+		clickButtonSFX = App->audio->LoadFx(SFX_CLICK_BUTTON);
 	}
 
 	return true;
@@ -86,6 +88,7 @@ update_status ModuleSceneIntro::Update() {
 	}
 
 	if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN || App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) {
+		App->audio->PlayFx(clickButtonSFX);
 		App->fade->FadeToBlack(App->sceneGame, App->sceneIntro, 3.0F);
 		SDL_SetWindowSize(&App->window->GetWindow(), SCREEN_WIDTH, SCREEN_HEIGHT);
 	}

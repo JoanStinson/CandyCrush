@@ -10,7 +10,7 @@ enum main_states {
 
 Application* App = nullptr;
 
-int main(int argc, char ** argv) {
+int main(int argc, char **argv) {
 	srand(static_cast<unsigned>(time(NULL)));
 
 	int main_return = EXIT_FAILURE;
