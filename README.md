@@ -7,7 +7,7 @@ A simple Candy Crush implementation using a 2D game engine architecture with C++
     <img alt="Made With SDL" src="https://img.shields.io/badge/made%20with-SDL-57b9d3.svg?logo=CPlusPlus">
   </a>
   <a>
-    <img alt="License" src="https://img.shields.io/github/license/JoanStinson/CandyCrush?&logo=github">
+    <img alt="License" src="https://img.shields.io/github/license/JoanStinson/CandyCrush?logo=github">
   </a>
   <a>
     <img alt="Last Commit" src="https://img.shields.io/github/last-commit/JoanStinson/CandyCrush?logo=Mapbox&color=orange">
