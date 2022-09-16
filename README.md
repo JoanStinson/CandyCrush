@@ -1,6 +1,6 @@
 # Candy Crush
 
-A simple Candy Crush implementation using a 2D game engine architecture with C++ and SDL (MVC pattern)..
+A simple Candy Crush implementation using a 2D game engine architecture with C++ and SDL (MVC pattern).
 
 <p align="center">
   <a>
